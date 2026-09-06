@@ -1,0 +1,7 @@
+[
+  {"paper_id":"gcn_2017","title":"Semi-Supervised Classification with Graph Convolutional Networks","authors":["Thomas N. Kipf","Max Welling"],"year":2017,"filename":"1609.02907v4.pdf","source_url":"https://arxiv.org/abs/1609.02907v4","body_start":"ABSTRACT","year_note":"ICLR 2017；预印本首次发表于 2016 年。"},
+  {"paper_id":"vgae_2016","title":"Variational Graph Auto-Encoders","authors":["Thomas N. Kipf","Max Welling"],"year":2016,"filename":"1611.07308v1.pdf","source_url":"https://arxiv.org/abs/1611.07308v1","body_start":"1 A latent variable model for graph-structured data","year_note":"采用预印本年份 2016。"},
+  {"paper_id":"graphsage_2017","title":"Inductive Representation Learning on Large Graphs","authors":["William L. Hamilton","Rex Ying","Jure Leskovec"],"year":2017,"filename":"1706.02216v4.pdf","source_url":"https://arxiv.org/abs/1706.02216v4","body_start":"Abstract","year_note":"NIPS 2017；所用 PDF 为 2018 年修订版，year 保留发表年份。"},
+  {"paper_id":"gat_2018","title":"Graph Attention Networks","authors":["Petar Veličković","Guillem Cucurull","Arantxa Casanova","Adriana Romero","Pietro Liò","Yoshua Bengio"],"year":2018,"filename":"1710.10903v3.pdf","source_url":"https://arxiv.org/abs/1710.10903v3","body_start":"ABSTRACT","year_note":"ICLR 2018；预印本首次发表于 2017 年。"},
+  {"paper_id":"gin_2019","title":"How Powerful are Graph Neural Networks?","authors":["Keyulu Xu","Weihua Hu","Jure Leskovec","Stefanie Jegelka"],"year":2019,"filename":"1810.00826v3.pdf","source_url":"https://arxiv.org/abs/1810.00826v3","body_start":"ABSTRACT","year_note":"ICLR 2019；预印本首次发表于 2018 年。"}
+]
