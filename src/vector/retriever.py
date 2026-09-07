@@ -4,9 +4,8 @@ import faiss
 from sentence_transformers import SentenceTransformer
 
 # --- 配置 ---
-# 如果 BAAI/bge-m3 下载太慢，就把下面这行换成 "all-MiniLM-L6-v2"
 MODEL_NAME = "BAAI/bge-m3"  
-DATA_PATH = "data/sample/papers.jsonl"
+DATA_PATH = "data/processed/papers.jsonl"
 
 print("正在加载向量模型（首次运行会自动下载，请保持网络畅通）...")
 model = SentenceTransformer(MODEL_NAME)
