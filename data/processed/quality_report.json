@@ -1,0 +1,131 @@
+{
+  "paper_count": 5,
+  "total_pages": 65,
+  "papers": [
+    {
+      "paper_id": "gcn_2017",
+      "filename": "1609.02907v4.pdf",
+      "source_url": "https://arxiv.org/abs/1609.02907v4",
+      "sha256": "a654f884db04a317b0f2414a83f2ba32a9f8442d29bcf1cb5f73f7af78a98070",
+      "pages": 14,
+      "characters": 42489,
+      "page_characters": [
+        3048,
+        3333,
+        3556,
+        2774,
+        3860,
+        4434,
+        3078,
+        3557,
+        3205,
+        3688,
+        2850,
+        2374,
+        444,
+        2262
+      ],
+      "replacement_characters": 0,
+      "limitations": "Text layer only; equations/tables/images are not reconstructed. References and appendices retained."
+    },
+    {
+      "paper_id": "vgae_2016",
+      "filename": "1611.07308v1.pdf",
+      "source_url": "https://arxiv.org/abs/1611.07308v1",
+      "sha256": "c98f72bd4eda8d2bdc4afffb4d16f83dbfce30e0223f1cd7ccb6721f98de8220",
+      "pages": 3,
+      "characters": 8575,
+      "page_characters": [
+        2292,
+        3984,
+        2295
+      ],
+      "replacement_characters": 0,
+      "limitations": "Text layer only; equations/tables/images are not reconstructed. References and appendices retained."
+    },
+    {
+      "paper_id": "graphsage_2017",
+      "filename": "1706.02216v4.pdf",
+      "source_url": "https://arxiv.org/abs/1706.02216v4",
+      "sha256": "e1f354eb12011cde24af1eb500d72463fc971b09d26b55688c7f918a86e31ce8",
+      "pages": 19,
+      "characters": 69908,
+      "page_characters": [
+        3049,
+        4139,
+        4618,
+        4022,
+        4477,
+        4631,
+        3370,
+        4512,
+        3997,
+        3049,
+        2516,
+        2893,
+        3494,
+        5019,
+        3647,
+        3714,
+        3061,
+        3919,
+        1745
+      ],
+      "replacement_characters": 0,
+      "limitations": "Text layer only; equations/tables/images are not reconstructed. References and appendices retained."
+    },
+    {
+      "paper_id": "gat_2018",
+      "filename": "1710.10903v3.pdf",
+      "source_url": "https://arxiv.org/abs/1710.10903v3",
+      "sha256": "a7d811a44e1c65bf27da3a01859f23a8edbe33b8f96114b4b5066aedb078f284",
+      "pages": 12,
+      "characters": 42225,
+      "page_characters": [
+        2600,
+        5109,
+        3904,
+        2147,
+        4530,
+        3734,
+        4623,
+        3089,
+        2806,
+        3637,
+        3284,
+        2740
+      ],
+      "replacement_characters": 0,
+      "limitations": "Text layer only; equations/tables/images are not reconstructed. References and appendices retained."
+    },
+    {
+      "paper_id": "gin_2019",
+      "filename": "1810.00826v3.pdf",
+      "source_url": "https://arxiv.org/abs/1810.00826v3",
+      "sha256": "a6ebf80c2790b8bac1fa378902993eae26020cc6d0d95e3964eea42b0c66a974",
+      "pages": 17,
+      "characters": 61358,
+      "page_characters": [
+        3274,
+        4451,
+        3809,
+        4384,
+        4299,
+        3036,
+        4647,
+        4409,
+        3644,
+        4733,
+        3338,
+        3295,
+        1521,
+        3168,
+        2915,
+        3105,
+        3298
+      ],
+      "replacement_characters": 0,
+      "limitations": "Text layer only; equations/tables/images are not reconstructed. References and appendices retained."
+    }
+  ]
+}
