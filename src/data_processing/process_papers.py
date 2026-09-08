@@ -42,6 +42,25 @@ def clean_page(text, page_number, vocabulary):
     return re.sub(r"\n{3,}", "\n\n", "\n".join(result)).strip()
 
 
+def prepare_page(text, item, page_number):
+    """Repairs observed in the supplied seven PDFs; keeps the original pipeline for other IDs."""
+    if item["paper_id"] == "deepwalk_2014":
+        text = re.sub(r"Deep-?\s*W\s*alk", "DeepWalk", text)
+        text = re.sub(r"DeepWalk(?=[a-z])", "DeepWalk ", text)
+    if item["paper_id"] == "node2vec_2016":
+        text = text.replace("ofnode2vec", "of node2vec")
+    if item["paper_id"] == "sgc_2019":
+        text = re.sub(r"<latexit\b[^>]*>.*?</latexit>", "", text, flags=re.DOTALL)
+    if page_number > 1 and item["paper_id"] in {"mpnn_2017", "sgc_2019"}:
+        lines = text.splitlines()
+        lines = [line for index, line in enumerate(lines)
+                 if not (index < 3 and line.strip() == item["title"])]
+        text = "\n".join(lines)
+    if page_number == 1 and item["paper_id"] == "diffpool_2018":
+        text = text.replace("Preprint. Work in progress.", "")
+    return text
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=ROOT / "data")
@@ -55,7 +74,7 @@ def main():
         for key in ("paper_id", "title", "filename", "body_start"):
             if not isinstance(item[key], str) or not item[key].strip():
                 raise ValueError(f"Invalid {key}")
-        if type(item["year"]) is not int or not item["authors"] or not all(isinstance(a, str) and a.strip() for a in item["authors"]):
+        if type(item["year"]) is not int or not isinstance(item["authors"], list) or not item["authors"] or not all(isinstance(a, str) and a.strip() for a in item["authors"]):
             raise ValueError("Invalid year or authors")
         pdf = data / "raw" / item["filename"]
         reader = PdfReader(pdf)
@@ -65,7 +84,7 @@ def main():
         vocabulary = set(re.findall(r"\b[a-zA-Z]{3,}\b", "\n".join(raw_pages).translate(LIGATURES).lower()))
         pages = []
         for number, raw in enumerate(raw_pages, 1):
-            cleaned = clean_page(raw, number, vocabulary)
+            cleaned = clean_page(prepare_page(raw, item, number), number, vocabulary)
             if number == 1:
                 marker = item["body_start"]
                 if marker not in cleaned:

@@ -1,6 +1,6 @@
-# 第一批真实论文数据
+# 真实论文数据：两批共 12 篇
 
-本批包含 GCN、VGAE、GraphSAGE、GAT、GIN 五篇用户提供的 arXiv PDF。文本直接从真实 PDF 提取，不是示例摘要，也没有使用 LLM 改写。B、C 统一读取 `data/processed/papers.jsonl`。
+当前包含 GCN、VGAE、GraphSAGE、GAT、GIN，以及 DeepWalk、node2vec、MPNN、DiffPool、SGC、APPNP、Cluster-GCN，共 12 篇用户提供的 arXiv PDF、149 页。文本直接从真实 PDF 提取，不是示例摘要，也没有使用 LLM 改写。B、C 统一读取 `data/processed/papers.jsonl`。
 
 ## 文件说明
 
@@ -44,6 +44,14 @@ python src/data_processing/process_papers.py
 
 参考文献里的模型、数据集不一定是当前论文使用的对象，C 抽关系时必须结合正文证据，不能只按关键词共现建立关系。B、C 的集成试读仍需各自确认。
 
-## 明日扩展
+## 第二批处理与合并结果
 
-组长指定的下一批为 DeepWalk、node2vec、MPNN、DiffPool、SGC、APPNP、Cluster-GCN。这是待处理清单，不是已验证的模型关系链。添加 PDF 后扩充 manifest，核对元数据和正文起点，再重新运行。新增排版需另行检查，不假设本脚本适合所有 PDF。
+七篇新增论文已经处理，共 84 页；原五篇为 65 页。合并后的 papers.jsonl 共 12 条，paper_pages.jsonl 共 149 条。原有五篇 JSON 记录与合并前逐条一致，使用更新脚本从全部 12 篇 PDF 重新生成也得到相同记录。原始 PDF 未改动。
+
+新增专属修复包括 DeepWalk 模型名断裂和粘连、node2vec 的 ofnode2vec 粘连、MPNN/SGC 后续页面起始处的重复标题、SGC latexit 软件标记、DiffPool 首页预印本标记；authors 现在显式检查列表类型。无关论文不启用这些专属修复。
+
+APPNP 使用 2022 年修订的 v6，发表年份仍为 ICLR 2019；DiffPool 使用 2019 年修订的 v4，发表年份为 NeurIPS 2018。DiffPool 年份依据：https://proceedings.neurips.cc/paper_files/paper/2018/hash/e77dbaf6759253c7c6d0efc5690369c7-Abstract.html 。作者写法与顺序依据所给 PDF 首页，SGC 作者顺序以真实 PDF 为准。
+
+第二批已进行全页结构检查，查看每篇首页、第二页、中间页、末页的渲染缩略图并抽查相应提取文本首尾；不是全文逐句校对。部分图表文字、出版信息仍可能插入正文，跨页断词和部分空格仍可能不完整，公式与表格数值须回查原始 PDF。
+
+统计：论文 12 篇；PDF 页面 149 页；chunk 数、实体数、关系数待 B/C 对此版本处理后提供。B/C 集成试读尚未验证。
