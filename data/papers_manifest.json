@@ -1,0 +1,182 @@
+[
+  {
+    "paper_id": "gcn_2017",
+    "title": "Semi-Supervised Classification with Graph Convolutional Networks",
+    "authors": [
+      "Thomas N. Kipf",
+      "Max Welling"
+    ],
+    "year": 2017,
+    "filename": "1609.02907v4.pdf",
+    "source_url": "https://arxiv.org/abs/1609.02907v4",
+    "body_start": "ABSTRACT",
+    "year_note": "ICLR 2017；预印本首次发表于 2016 年。"
+  },
+  {
+    "paper_id": "vgae_2016",
+    "title": "Variational Graph Auto-Encoders",
+    "authors": [
+      "Thomas N. Kipf",
+      "Max Welling"
+    ],
+    "year": 2016,
+    "filename": "1611.07308v1.pdf",
+    "source_url": "https://arxiv.org/abs/1611.07308v1",
+    "body_start": "1 A latent variable model for graph-structured data",
+    "year_note": "采用预印本年份 2016。"
+  },
+  {
+    "paper_id": "graphsage_2017",
+    "title": "Inductive Representation Learning on Large Graphs",
+    "authors": [
+      "William L. Hamilton",
+      "Rex Ying",
+      "Jure Leskovec"
+    ],
+    "year": 2017,
+    "filename": "1706.02216v4.pdf",
+    "source_url": "https://arxiv.org/abs/1706.02216v4",
+    "body_start": "Abstract",
+    "year_note": "NIPS 2017；所用 PDF 为 2018 年修订版，year 保留发表年份。"
+  },
+  {
+    "paper_id": "gat_2018",
+    "title": "Graph Attention Networks",
+    "authors": [
+      "Petar Veličković",
+      "Guillem Cucurull",
+      "Arantxa Casanova",
+      "Adriana Romero",
+      "Pietro Liò",
+      "Yoshua Bengio"
+    ],
+    "year": 2018,
+    "filename": "1710.10903v3.pdf",
+    "source_url": "https://arxiv.org/abs/1710.10903v3",
+    "body_start": "ABSTRACT",
+    "year_note": "ICLR 2018；预印本首次发表于 2017 年。"
+  },
+  {
+    "paper_id": "gin_2019",
+    "title": "How Powerful are Graph Neural Networks?",
+    "authors": [
+      "Keyulu Xu",
+      "Weihua Hu",
+      "Jure Leskovec",
+      "Stefanie Jegelka"
+    ],
+    "year": 2019,
+    "filename": "1810.00826v3.pdf",
+    "source_url": "https://arxiv.org/abs/1810.00826v3",
+    "body_start": "ABSTRACT",
+    "year_note": "ICLR 2019；预印本首次发表于 2018 年。"
+  },
+  {
+    "paper_id": "deepwalk_2014",
+    "title": "DeepWalk: Online Learning of Social Representations",
+    "authors": [
+      "Bryan Perozzi",
+      "Rami Al-Rfou",
+      "Steven Skiena"
+    ],
+    "year": 2014,
+    "filename": "1403.6652v2.pdf",
+    "source_url": "https://arxiv.org/abs/1403.6652v2",
+    "body_start": "ABSTRACT",
+    "year_note": "KDD 2014"
+  },
+  {
+    "paper_id": "node2vec_2016",
+    "title": "node2vec: Scalable Feature Learning for Networks",
+    "authors": [
+      "Aditya Grover",
+      "Jure Leskovec"
+    ],
+    "year": 2016,
+    "filename": "1607.00653v1.pdf",
+    "source_url": "https://arxiv.org/abs/1607.00653v1",
+    "body_start": "ABSTRACT",
+    "year_note": "KDD 2016"
+  },
+  {
+    "paper_id": "mpnn_2017",
+    "title": "Neural Message Passing for Quantum Chemistry",
+    "authors": [
+      "Justin Gilmer",
+      "Samuel S. Schoenholz",
+      "Patrick F. Riley",
+      "Oriol Vinyals",
+      "George E. Dahl"
+    ],
+    "year": 2017,
+    "filename": "1704.01212v2.pdf",
+    "source_url": "https://arxiv.org/abs/1704.01212v2",
+    "body_start": "Abstract",
+    "year_note": "ICML 2017"
+  },
+  {
+    "paper_id": "diffpool_2018",
+    "title": "Hierarchical Graph Representation Learning with Differentiable Pooling",
+    "authors": [
+      "Rex Ying",
+      "Jiaxuan You",
+      "Christopher Morris",
+      "Xiang Ren",
+      "William L. Hamilton",
+      "Jure Leskovec"
+    ],
+    "year": 2018,
+    "filename": "1806.08804v4.pdf",
+    "source_url": "https://arxiv.org/abs/1806.08804v4",
+    "body_start": "Abstract",
+    "year_note": "NeurIPS 2018; PDF revised in 2019. Authors follow this PDF, including Rex Ying and William L. Hamilton. Conference source: https://proceedings.neurips.cc/paper_files/paper/2018/hash/e77dbaf6759253c7c6d0efc5690369c7-Abstract.html"
+  },
+  {
+    "paper_id": "sgc_2019",
+    "title": "Simplifying Graph Convolutional Networks",
+    "authors": [
+      "Felix Wu",
+      "Tianyi Zhang",
+      "Amauri Holanda de Souza Jr.",
+      "Christopher Fifty",
+      "Tao Yu",
+      "Kilian Q. Weinberger"
+    ],
+    "year": 2019,
+    "filename": "1902.07153v2.pdf",
+    "source_url": "https://arxiv.org/abs/1902.07153v2",
+    "body_start": "Abstract",
+    "year_note": "ICML 2019; author order follows supplied PDF, not sample data."
+  },
+  {
+    "paper_id": "appnp_2019",
+    "title": "Predict then Propagate: Graph Neural Networks meet Personalized PageRank",
+    "authors": [
+      "Johannes Gasteiger",
+      "Aleksandar Bojchevski",
+      "Stephan Günnemann"
+    ],
+    "year": 2019,
+    "filename": "1810.05997v6.pdf",
+    "source_url": "https://arxiv.org/abs/1810.05997v6",
+    "body_start": "ABSTRACT",
+    "year_note": "ICLR 2019; PDF revised in 2022, first preprint in 2018."
+  },
+  {
+    "paper_id": "cluster_gcn_2019",
+    "title": "Cluster-GCN: An Efficient Algorithm for Training Deep and Large Graph Convolutional Networks",
+    "authors": [
+      "Wei-Lin Chiang",
+      "Xuanqing Liu",
+      "Si Si",
+      "Yang Li",
+      "Samy Bengio",
+      "Cho-Jui Hsieh"
+    ],
+    "year": 2019,
+    "filename": "1905.07953v2.pdf",
+    "source_url": "https://arxiv.org/abs/1905.07953v2",
+    "body_start": "ABSTRACT",
+    "year_note": "KDD 2019"
+  }
+]
