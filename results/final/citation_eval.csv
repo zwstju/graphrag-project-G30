@@ -1,0 +1,33 @@
+﻿qid,qtype,method,answer_sha256,total_claims,supported_claims,unsupported_claims,claim_support_rate,citation_validity,verification_latency_s,verification_attempts,verification_error
+F06,fact,structured_hybrid_rerank_posthoc_verification,3a041d7058fe612b264c0c70370bee284f5805d51fb0086dc0002fd0193978c2,2,2,0,1.0,1.0,6.930174344000989,1,
+F07,fact,structured_hybrid_rerank_posthoc_verification,276f758645f1b38bd140bc6a204aac8e667e91ddd94cef30b05cdd50b2c24dd3,7,5,2,0.7142857142857143,1.0,17.116561561000708,1,
+F08,fact,structured_hybrid_rerank_posthoc_verification,21f96493bea06cf9d9a28bf37d4668880edc0947892f98c386042b8cb15de565,14,11,3,0.7857142857142857,1.0,35.75440488000095,1,
+F09,fact,structured_hybrid_rerank_posthoc_verification,ca3bdfce9271418e4348ae9d435a090f8948c3cf048bc1331253d54d4e4a6507,4,4,0,1.0,1.0,4.590986215000157,1,
+R03,relation,structured_hybrid_rerank_posthoc_verification,f693372cf0bd4d60a358fc88239b883ea780f792083bbefec7f5923fc4021fca,7,6,1,0.8571428571428571,1.0,69.67874422200111,2,
+R05,relation,structured_hybrid_rerank_posthoc_verification,1e379df63f4d7e796e216c4d2e8a674da47605d3e58cae670ca70ededbb5195c,,,,,1.0,117.37401646599756,3,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
+R07,relation,structured_hybrid_rerank_posthoc_verification,15849615231b0f0bcc0ef8663cffc50bffc48d578c540aa5b9e9020f2b83f717,6,5,1,0.8333333333333334,1.0,20.14631392099909,1,
+R09,relation,structured_hybrid_rerank_posthoc_verification,c47da8f98b658578960f8cfdbf9f3b0f2a963b1cd2513168e9647a178323c64c,8,8,0,1.0,1.0,15.886514409998199,1,
+R11,relation,structured_hybrid_rerank_posthoc_verification,f22f3fae97d0e7197f164a9760ecd58d58b9b00cbc25c82cd380b43c8ebb3812,13,9,4,0.6923076923076923,1.0,12.573571138000261,1,
+C01,comparison,structured_hybrid_rerank_posthoc_verification,489335f83fcc47f9d2c0bc7f9b206e511a561b19c377d4393393755d79c971ff,9,7,2,0.7777777777777778,1.0,116.05809728199893,3,
+C02,comparison,structured_hybrid_rerank_posthoc_verification,5ef0d78fa69b349c8fd67860635535fe6c7da4fd3aa2e4a260b9508bb7c0dadf,,,,,1.0,116.10270060500261,3,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
+C03,comparison,structured_hybrid_rerank_posthoc_verification,c4c3b052ced7a0bbf4a1f098d8cf31cdb0ab5546a0f0b4d8edb2593d0892c2b1,8,5,3,0.625,1.0,33.54467053400003,1,
+C04,comparison,structured_hybrid_rerank_posthoc_verification,e4d24cba5967d6d6967c12a6dbd96c0868c3eb0568c5b6ee3577e4dee15c31ce,11,8,3,0.7272727272727273,1.0,32.68400432300041,1,
+C05,comparison,structured_hybrid_rerank_posthoc_verification,eb8a512868f81c489e80c7690584367aabe3f54d59338bfa65365a561f12e30f,11,10,1,0.9090909090909091,1.0,114.04877706800107,3,
+C09,comparison,structured_hybrid_rerank_posthoc_verification,e5ebc042c1df1b35888731ce1fd56671b259743d0da718b984439e919f5e45f0,,,,,1.0,116.60372537299918,3,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
+C11,comparison,structured_hybrid_rerank_posthoc_verification,ba76694e0a401ef48965ae511a449fb5e27ea998d6b6629f888a50e6358ccb24,10,4,6,0.4,1.0,21.784282774999156,1,
+M02,multi_hop,structured_hybrid_rerank_posthoc_verification,119baf7cfca7c83e132e0f21b6b8d2d0137836c183fd80792017bc5a77ea55d8,7,6,1,0.8571428571428571,1.0,25.663296359001833,1,
+M04,multi_hop,structured_hybrid_rerank_posthoc_verification,c9706616c9e141e3f94aa5a20cf508f3cc9ebeeae336034864da8e50e097cc2b,6,6,0,1.0,1.0,25.06241329600016,1,
+M07,multi_hop,structured_hybrid_rerank_posthoc_verification,73f8f75786898f970ac696da90c1bd8997695f7fbb19a6462c131e3ccdd95c86,3,3,0,1.0,1.0,3.2699620829989726,1,
+M08,multi_hop,structured_hybrid_rerank_posthoc_verification,fd5fea65813fa828c02364249a92f1c0807065d6bb9ffa8ca368c2ff8631af60,4,4,0,1.0,1.0,9.9249908089987,1,
+M10,multi_hop,structured_hybrid_rerank_posthoc_verification,5bcbb68aa11bb11017796ec01410e6edd2abc958f1a96965ac2fea1c0c30f119,,,,,1.0,117.42546118899918,3,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
+CF15,fact,structured_hybrid_rerank_posthoc_verification,5c2ecb8c025dc1890de3eaa360184413b39378a6b0adc25feae02b589834e9da,,,,,1.0,125.34051848600211,3,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
+CF16,fact,structured_hybrid_rerank_posthoc_verification,264008d59e42790ab8e7e642b2bbaca1ba48798d15dfbb972a304c9e510e594e,8,4,4,0.5,1.0,109.29835143899982,3,
+CF19,fact,structured_hybrid_rerank_posthoc_verification,b944a4d0e581dc61e1c9885bb0651a850bf91e1693076062afee166f05970f4d,4,4,0,1.0,1.0,10.702333816003375,1,
+CF20,fact,structured_hybrid_rerank_posthoc_verification,efd96d5c304852d8546b4d7f22d9fc61883e585d2f161c78e2d367eb47d63041,15,10,5,0.6666666666666666,1.0,72.94575354699919,2,
+CR13,relation,structured_hybrid_rerank_posthoc_verification,d968e33740422ae55fdd7c6e0e3206fcb879ed56536fae750cfa78587de412a8,3,3,0,1.0,1.0,23.170766142000502,1,
+CR18,relation,structured_hybrid_rerank_posthoc_verification,29541f58e6ee5d9877df440c9a220f51e34efcd8f435bd45c12531624a15ec7c,9,9,0,1.0,1.0,9.554359071000363,1,
+CR19,relation,structured_hybrid_rerank_posthoc_verification,2bce822132a6663924876b05a4e43d95c1e5472eeed618e90fa25904cdc5f833,9,9,0,1.0,1.0,22.328524454998842,1,
+CC15,comparison,structured_hybrid_rerank_posthoc_verification,ec65cd8e6cf6d9d7b0b29dd6ad86f1d0a199c1fd33a0e9dc1659fa2ce22fbdf3,7,4,3,0.5714285714285714,1.0,14.123153160999209,1,
+CM14,multi_hop,structured_hybrid_rerank_posthoc_verification,52ede32799d9e52055dc530a5f9fcc6ecd15df1ad1c55f8cd6c394a262b94ed3,6,5,1,0.8333333333333334,1.0,73.95276894599738,2,
+CM17,multi_hop,structured_hybrid_rerank_posthoc_verification,fb1c4cc94f327bea4bb0a04e203a5c08f89c0d38e62cf64f30efcd2acaedb9e1,4,4,0,1.0,1.0,12.987441506000323,1,
+CM20,multi_hop,structured_hybrid_rerank_posthoc_verification,8dfbd718f4eb9f4a9954897e16ffc9fb51bddfd8f33c7b14af2a94dc3172ad46,4,4,0,1.0,1.0,9.70032453100066,1,

@@ -4,6 +4,7 @@ from pathlib import Path
 import networkx as nx
 
 from .query_parser import find_seed_entities
+from .entity_resolution import canonicalize_entity
 from .utils import normalize_key, read_jsonl
 
 
@@ -33,8 +34,13 @@ def _load_graph():
     graph = nx.MultiDiGraph()
 
     for t in triples:
-        source = t["source"]
-        target = t["target"]
+        source = canonicalize_entity(t["source"])
+        target = canonicalize_entity(t["target"])
+
+        # 同时更新内存中的 triple，
+        # 保证后面的 candidate_triples 和 NetworkX 使用相同实体名
+        t["source"] = source
+        t["target"] = target
 
         graph.add_node(source, type=t.get("source_type", ""))
         graph.add_node(target, type=t.get("target_type", ""))

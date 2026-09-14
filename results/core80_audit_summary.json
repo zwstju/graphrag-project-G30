@@ -1,0 +1,168 @@
+{
+  "terminology": {
+    "input": "candidate benchmark",
+    "automatic_stage": "LLM evidence audit",
+    "supported_status": "llm_evidence_supported",
+    "next_stage": "manual review",
+    "human_approved_status": "manually_verified",
+    "metric_name": "candidate-answer evidence support rate"
+  },
+  "audit_artifact": "results/core80_audit.jsonl",
+  "audit_artifact_sha256": "cc1a0857c7a26190a0407a27ca1006dd1c80374faebd36e123ba6ddece532784",
+  "audit_runtime_seconds": 547.577442234,
+  "overall": {
+    "total": 80,
+    "successfully_audited": 71,
+    "llm_evidence_supported": 69,
+    "llm_evidence_not_supported": 2,
+    "audit_failures": 9,
+    "candidate_answer_evidence_support_rate": 0.971830985915493,
+    "mean_support_score_successful_audits": 0.9674647887323944,
+    "median_support_score_successful_audits": 1.0
+  },
+  "by_qtype": {
+    "comparison": {
+      "total": 20,
+      "successfully_audited": 17,
+      "llm_evidence_supported": 16,
+      "llm_evidence_not_supported": 1,
+      "audit_failures": 3,
+      "candidate_answer_evidence_support_rate": 0.9411764705882353,
+      "mean_support_score_successful_audits": 0.95,
+      "median_support_score_successful_audits": 1.0
+    },
+    "fact": {
+      "total": 20,
+      "successfully_audited": 18,
+      "llm_evidence_supported": 17,
+      "llm_evidence_not_supported": 1,
+      "audit_failures": 2,
+      "candidate_answer_evidence_support_rate": 0.9444444444444444,
+      "mean_support_score_successful_audits": 0.9500000000000001,
+      "median_support_score_successful_audits": 1.0
+    },
+    "multi_hop": {
+      "total": 20,
+      "successfully_audited": 19,
+      "llm_evidence_supported": 19,
+      "llm_evidence_not_supported": 0,
+      "audit_failures": 1,
+      "candidate_answer_evidence_support_rate": 1.0,
+      "mean_support_score_successful_audits": 0.9973684210526316,
+      "median_support_score_successful_audits": 1.0
+    },
+    "relation": {
+      "total": 20,
+      "successfully_audited": 17,
+      "llm_evidence_supported": 17,
+      "llm_evidence_not_supported": 0,
+      "audit_failures": 3,
+      "candidate_answer_evidence_support_rate": 1.0,
+      "mean_support_score_successful_audits": 0.9699999999999999,
+      "median_support_score_successful_audits": 1.0
+    }
+  },
+  "by_difficulty": {
+    "easy": {
+      "total": 12,
+      "successfully_audited": 11,
+      "llm_evidence_supported": 11,
+      "llm_evidence_not_supported": 0,
+      "audit_failures": 1,
+      "candidate_answer_evidence_support_rate": 1.0,
+      "mean_support_score_successful_audits": 1.0,
+      "median_support_score_successful_audits": 1.0
+    },
+    "hard": {
+      "total": 28,
+      "successfully_audited": 26,
+      "llm_evidence_supported": 25,
+      "llm_evidence_not_supported": 1,
+      "audit_failures": 2,
+      "candidate_answer_evidence_support_rate": 0.9615384615384616,
+      "mean_support_score_successful_audits": 0.9692307692307692,
+      "median_support_score_successful_audits": 1.0
+    },
+    "medium": {
+      "total": 40,
+      "successfully_audited": 34,
+      "llm_evidence_supported": 33,
+      "llm_evidence_not_supported": 1,
+      "audit_failures": 6,
+      "candidate_answer_evidence_support_rate": 0.9705882352941176,
+      "mean_support_score_successful_audits": 0.9555882352941177,
+      "median_support_score_successful_audits": 1.0
+    }
+  },
+  "multi_paper_integrity": {
+    "single_paper_questions": 50,
+    "two_paper_questions": 27,
+    "three_paper_questions": 3,
+    "multi_paper_questions": 30,
+    "gold_paper_omission_violation_count": 0,
+    "gold_paper_omission_violations": [],
+    "per_paper_quota_violation_count": 0,
+    "per_paper_quota_violations": []
+  },
+  "evidence_integrity": {
+    "total_selected_evidence_chunks": 339,
+    "references_chunks_selected": 0,
+    "missing_chunk_ids": 0,
+    "missing_paper_ids": 0,
+    "gold_answer_modification_count": 0,
+    "gold_answer_modified_qids": [],
+    "manual_status_values": [
+      "unreviewed"
+    ]
+  },
+  "reliability": {
+    "total_llm_api_attempts": 111,
+    "retry_count": 31,
+    "empty_response_count": 38,
+    "json_parse_failure_count": 2,
+    "transport_failure_count": 0,
+    "items_failed_after_all_retries": 9,
+    "items_requiring_multiple_attempts": [
+      "F01",
+      "F03",
+      "R05",
+      "R06",
+      "R10",
+      "C04",
+      "C08",
+      "C10",
+      "M03",
+      "CF14",
+      "CF15",
+      "CF17",
+      "CF20",
+      "CR13",
+      "CR17",
+      "CR20",
+      "CC13",
+      "CC14",
+      "CC20",
+      "CM15"
+    ]
+  },
+  "unsupported_with_suggested_answer_count": 2,
+  "unsupported_with_suggested_answers": [
+    {
+      "id": "CF17",
+      "original_candidate_answer": "VGAE 通过变分推断优化证据下界（ELBO），其中包含重构项以及近似后验与先验之间的 KL 散度项。",
+      "suggested_answer": "现有证据不足以确认ELBO；需补充VGAE目标函数（ELBO含重构项与KL项）的原文。",
+      "audit_reason": "证据未明确给出VGAE训练目标。E3仅说明模型基于VAE、使用潜变量和GCN推断q(Z|X,A)，E2提到高斯先验，但均未出现ELBO、重构项或KL散度项。因此候选答案的关键概率目标没有直接证据支持。"
+    },
+    {
+      "id": "CC14",
+      "original_candidate_answer": "确定性 GAE 直接输出节点潜在向量；VGAE 输出潜变量分布的参数并进行变分采样，同时加入 KL 正则。",
+      "suggested_answer": "证据支持：VGAE 编码输出 μ 和 log σ²，并据此采样 z_i；但未说明确定性 GAE 的直接输出，也未明确 KL 正则。",
+      "audit_reason": "证据仅显示 VGAE 的推断模型 q(Z|X,A)=∏N(z_i|μ_i,diag(σ_i²))，μ=GCNμ，log σ=GCNσ，说明输出分布参数并采样潜变量。未提供确定性 GAE 直接输出节点潜在向量的描述，也未明确提及 KL 正则；仅标题/VAE 暗示。因此候选答案的关键对比和 KL 说法超出所给证据。"
+    }
+  ],
+  "unsupported_qids": [
+    "CF17",
+    "CC14"
+  ],
+  "manual_review_queue_count": 20
+}

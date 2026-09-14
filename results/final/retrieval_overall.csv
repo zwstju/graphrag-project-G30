@@ -1,0 +1,5 @@
+﻿method,qtype,question_count,paper_retrieval_recall_proxy,paper_evidence_precision_proxy,mean_final_evidence_count,mean_retrieval_latency_s
+fixed_vector,overall,69,0.8236714975845411,0.7536231884057971,6.0,0.015129085652375395
+structured_hybrid_rerank,overall,69,0.8599033816425121,0.7560386473429951,6.0,1.483584005029168
+structured_vanilla_hybrid,overall,69,0.8574879227053139,0.7439613526570049,6.0,0.0257055185073219
+structured_vector,overall,69,0.8671497584541064,0.7584541062801933,6.0,0.01198991353648244

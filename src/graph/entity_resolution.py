@@ -16,6 +16,7 @@ ALIASES = {
     normalize_key("Graph Isomorphism Networks"): "GIN",
     normalize_key("Simplifying Graph Convolutional Networks"): "SGC",
     normalize_key("Approximate Personalized Propagation of Neural Predictions"): "APPNP",
+    normalize_key("Link Prediction"): "Link Prediction"
 }
 
 

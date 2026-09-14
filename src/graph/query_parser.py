@@ -5,14 +5,35 @@ from .utils import normalize_key, parse_json_array
 
 def find_entities_lexical(query: str, graph_nodes: list[str]) -> list[str]:
     q = normalize_key(query)
-    matches = []
+
+    candidates = []
 
     for node in graph_nodes:
         node_key = normalize_key(node)
-        if node_key and node_key in q:
-            matches.append(node)
 
-    matches.sort(key=len, reverse=True)
+        if node_key and node_key in q:
+            candidates.append((node, node_key))
+
+    # 长实体优先，例如先处理 VGAE，再处理 GAE
+    candidates.sort(key=lambda x: len(x[1]), reverse=True)
+
+    matches = []
+    matched_keys = []
+
+    for node, node_key in candidates:
+        # 如果当前实体只是已经匹配到的更长实体的一部分，
+        # 则认为是子串误匹配，不再作为独立 seed。
+        is_substring_of_existing = any(
+            node_key != existing_key and node_key in existing_key
+            for existing_key in matched_keys
+        )
+
+        if is_substring_of_existing:
+            continue
+
+        matches.append(node)
+        matched_keys.append(node_key)
+
     return list(dict.fromkeys(matches))
 
 

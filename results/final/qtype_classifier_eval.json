@@ -1,0 +1,46 @@
+{
+  "classifier": "query-text-only rule-based qtype inference",
+  "benchmark": "benchmark/gnn_qa_core80.jsonl",
+  "total": 80,
+  "correct": 80,
+  "accuracy": 1.0,
+  "labels": [
+    "fact",
+    "relation",
+    "comparison",
+    "multi_hop"
+  ],
+  "confusion_matrix": {
+    "fact": {
+      "fact": 20,
+      "relation": 0,
+      "comparison": 0,
+      "multi_hop": 0
+    },
+    "relation": {
+      "fact": 0,
+      "relation": 20,
+      "comparison": 0,
+      "multi_hop": 0
+    },
+    "comparison": {
+      "fact": 0,
+      "relation": 0,
+      "comparison": 20,
+      "multi_hop": 0
+    },
+    "multi_hop": {
+      "fact": 0,
+      "relation": 0,
+      "comparison": 0,
+      "multi_hop": 20
+    }
+  },
+  "per_class_accuracy": {
+    "fact": 1.0,
+    "relation": 1.0,
+    "comparison": 1.0,
+    "multi_hop": 1.0
+  },
+  "errors": []
+}

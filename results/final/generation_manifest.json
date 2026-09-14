@@ -1,0 +1,25 @@
+{
+  "benchmark": "benchmark/gnn_qa_core32_generation_stratified.jsonl",
+  "retrieval_artifact": "results/final/retrieval_per_question.jsonl",
+  "methods": [
+    "structured_vector",
+    "structured_vanilla_hybrid",
+    "structured_hybrid_rerank"
+  ],
+  "question_count": 32,
+  "row_count": 96,
+  "evidence_count_per_answer": 6,
+  "generation_temperature": 0.0,
+  "generation_max_tokens": 8192,
+  "judge_temperature": 0.0,
+  "judge_max_tokens": 8192,
+  "llm_model": "deepseek-v4-flash",
+  "llm_api_base": "https://api.deepseek.com",
+  "started_at_utc": "2026-09-14T14:01:03.945027+00:00",
+  "completed_at_utc": "2026-09-14T14:19:23.708239+00:00",
+  "runtime_seconds": 1099.763212,
+  "generation_failures": 0,
+  "judge_failures": 0,
+  "total_answer_attempts": 96,
+  "total_judge_attempts": 97
+}

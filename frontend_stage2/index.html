@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evidence-Centric HybridRAG</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">KG</div>
+        <div>
+          <h1>Evidence-Centric HybridRAG</h1>
+          <p>面向 GNN 科研论文的结构化检索、证据重排与可验证问答</p>
+        </div>
+      </div>
+      <div class="status" id="status">
+        <span class="status-dot"></span>
+        <span id="statusText">连接后端中…</span>
+      </div>
+    </header>
+
+    <section class="metrics">
+      <div class="metric"><span>论文</span><strong id="papers">—</strong></div>
+      <div class="metric"><span>有效 Chunks</span><strong id="chunks">—</strong></div>
+      <div class="metric"><span>KG Nodes</span><strong id="nodes">—</strong></div>
+      <div class="metric"><span>KG Edges</span><strong id="edges">—</strong></div>
+      <div class="metric accent"><span>Claim Support</span><strong>79.9%</strong></div>
+    </section>
+
+    <section class="composer">
+      <textarea id="query" rows="2" placeholder="输入一个关于 GNN 论文的问题…">GCN 和 GraphSAGE 在归纳能力上有什么区别？</textarea>
+      <div class="composer-actions">
+        <div class="method-group" role="radiogroup" aria-label="retrieval method">
+          <label><input type="radio" name="method" value="vector">Vector</label>
+          <label><input type="radio" name="method" value="hybrid">Hybrid</label>
+          <label><input type="radio" name="method" value="rerank" checked>Hybrid + Rerank</label>
+          <label><input type="radio" name="method" value="full">Full</label>
+        </div>
+        <label class="verify-toggle" title="仅 Full 模式有效；会更慢">
+          <input type="checkbox" id="verify">
+          <span>Claim verification</span>
+        </label>
+        <button id="ask" class="primary">开始提问</button>
+      </div>
+      <div class="examples">
+        <button data-q="Which model uses GCN as an encoder?">GCN encoder</button>
+        <button data-q="Which datasets are used to evaluate GraphSAGE?">GraphSAGE datasets</button>
+        <button data-q="GCN 和 GAT 在邻居权重分配上有什么区别？">GCN vs GAT</button>
+      </div>
+      <div id="error" class="error hidden"></div>
+    </section>
+
+    <section class="workspace">
+      <article class="panel answer-panel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">GROUNDED ANSWER</span>
+            <h2>回答</h2>
+          </div>
+          <div class="pill" id="methodPill">RERANK</div>
+        </div>
+        <div id="answer" class="answer placeholder">
+          提问后，这里显示基于最终证据生成的回答。
+        </div>
+        <div class="latency" id="latency"></div>
+      </article>
+
+      <article class="panel graph-panel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">QUERY-SPECIFIC GRAPH</span>
+            <h2>证据图</h2>
+          </div>
+          <div class="legend">
+            <span><i class="dot entity"></i>Entity</span>
+            <span><i class="dot paper"></i>Paper</span>
+          </div>
+        </div>
+        <div class="graph-canvas">
+          <svg id="graphSvg" viewBox="0 0 760 390" aria-label="evidence graph">
+            <defs>
+              <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" class="arrow-head"></path>
+              </marker>
+            </defs>
+            <g id="edgeLayer"></g>
+            <g id="nodeLayer"></g>
+          </svg>
+          <div id="graphEmpty" class="graph-empty">Graph evidence 会在这里形成局部证据图。</div>
+        </div>
+      </article>
+
+      <article class="panel evidence-panel">
+        <div class="panel-head compact">
+          <div>
+            <span class="kicker">EVIDENCE QUALITY CONTROL</span>
+            <h2>Evidence</h2>
+          </div>
+          <div class="switcher">
+            <button id="beforeBtn" class="seg active" type="button">Before Rerank</button>
+            <button id="afterBtn" class="seg" type="button">After Rerank</button>
+          </div>
+        </div>
+        <div id="evidenceList" class="evidence-list"></div>
+      </article>
+
+      <article class="panel verify-panel">
+        <div class="panel-head compact">
+          <div>
+            <span class="kicker">ANSWER AUDIT</span>
+            <h2>Verification</h2>
+          </div>
+          <span class="pill muted-pill" id="verifyState">NOT RUN</span>
+        </div>
+        <div id="verification" class="verification-empty">
+          Full 模式下勾选 Claim verification 才会运行实时验证。录屏时建议关闭，避免等待。
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="/assets/app.js"></script>
+</body>
+</html>

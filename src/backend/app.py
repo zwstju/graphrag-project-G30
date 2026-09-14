@@ -49,6 +49,11 @@ def health() -> Dict[str, str]:
 def ask(request: AskRequest) -> AskResponse:
     try:
         result = answer_query(request.query, request.mode)
+        print("\n===== BACKEND DEBUG =====")
+        print("answer repr:", repr(result["answer"]))
+        print("answer length:", len(result["answer"]))
+        print("===== END BACKEND DEBUG =====\n")
+
         return AskResponse(**result)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

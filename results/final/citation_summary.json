@@ -1,0 +1,22 @@
+{
+  "source_generation_artifact": "results/final/generation_outputs.jsonl",
+  "answer_regenerated": false,
+  "answers": 32,
+  "successfully_verified_answers": 27,
+  "verification_failures": 5,
+  "total_claims": 199,
+  "supported_claims": 159,
+  "unsupported_claims": 40,
+  "citation_support_rate": 0.7989949748743719,
+  "mean_citation_validity": 1.0,
+  "total_verification_latency_s": 1516.327963953001,
+  "mean_verification_latency_s": 47.38524887353128,
+  "total_api_attempts": 51,
+  "retry_count": 19,
+  "verification_max_tokens": 8192,
+  "llm_model": "deepseek-v4-flash",
+  "llm_api_base": "https://api.deepseek.com",
+  "started_at_utc": "2026-09-14T14:37:14.551578+00:00",
+  "completed_at_utc": "2026-09-14T15:02:30.943598+00:00",
+  "runtime_seconds": 1516.39202
+}

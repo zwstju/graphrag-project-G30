@@ -1,0 +1,12 @@
+{
+  "papers_path": "data/processed/papers.jsonl",
+  "retrieval_chunks_path": "data/stage2/fixed_chunks_1200_200.jsonl",
+  "faiss_path": "data/stage2/fixed_vector_1200_200.index",
+  "vector_meta_path": "data/stage2/fixed_vector_1200_200_meta.jsonl",
+  "vector_manifest_path": "data/stage2/fixed_vector_1200_200_manifest.json",
+  "embedding_model": "BAAI/bge-m3",
+  "embedding_device": "cuda",
+  "embedding_batch_size": 16,
+  "chunk_max_chars": 1200,
+  "chunk_overlap_chars": 200
+}

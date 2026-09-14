@@ -1,0 +1,17 @@
+{
+  "manifest_version": 1,
+  "built_at_utc": "2026-09-14T13:25:59.266910+00:00",
+  "embedding_model": "BAAI/bge-m3",
+  "build_device": "cuda",
+  "embedding_batch_size": 16,
+  "corpus_path": "data/stage2/fixed_chunks_1200_200.jsonl",
+  "corpus_sha256": "9f9fa750663932b1803c22ed4eaf3ed8ffd10dc042006b5f5cc6f06b3876408a",
+  "chunk_count": 521,
+  "embedding_dimension": 1024,
+  "normalized": true,
+  "faiss_index_type": "IndexFlatIP",
+  "index_path": "data/stage2/fixed_vector_1200_200.index",
+  "index_sha256": "ed763a9fc592a32eada9c4327d51694786eca59ba662accfb154f388fe732a71",
+  "metadata_path": "data/stage2/fixed_vector_1200_200_meta.jsonl",
+  "metadata_sha256": "9f9fa750663932b1803c22ed4eaf3ed8ffd10dc042006b5f5cc6f06b3876408a"
+}

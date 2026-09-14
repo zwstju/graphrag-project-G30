@@ -1,0 +1,32 @@
+{
+  "audit_method": "gold-aware evidence mining for benchmark validation",
+  "started_at_utc": "2026-09-14T12:54:01.721564+00:00",
+  "benchmark_path": "benchmark/gnn_qa_core80_audit_smoke8.jsonl",
+  "benchmark_sha256": "e3155c27b775cd8585a3a7dcd7d57f8cd4910a8b98f2d68a9446db7856e48acf",
+  "retrieval_corpus_path": "data/stage2/retrieval_chunks.jsonl",
+  "retrieval_corpus_sha256": "b27c2007c31b0d6feff699d01ff6ad8651f8438918b940ec9683050b98d947ec",
+  "retrieval_corpus_chunk_count": 446,
+  "canonical_references_count": 0,
+  "vector_index_path": "data/stage2/vector.index",
+  "vector_index_sha256": "737f1078668c0a4cb124ba35609d6e77627d30a5fa4cf8dbb744a0cb48704a71",
+  "embedding_model": "BAAI/bge-m3",
+  "embedding_device": "cuda",
+  "audit_model": "deepseek-v4-flash",
+  "audit_api_base": "https://api.deepseek.com",
+  "top_k_per_gold_paper": 3,
+  "max_context_chars_per_gold_paper": 6000,
+  "max_audit_attempts": 3,
+  "selected_item_count": 8,
+  "selected_qids": [
+    "F02",
+    "CF19",
+    "R01",
+    "CR17",
+    "C02",
+    "C11",
+    "M01",
+    "M03"
+  ],
+  "output_jsonl": "results/core80_audit_smoke8.jsonl",
+  "summary_csv": "results/core80_audit_smoke8.csv"
+}

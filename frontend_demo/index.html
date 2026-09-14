@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evidence-Centric HybridRAG · Defense Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="stage" id="stage">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">KG</div>
+        <div>
+          <div class="eyebrow">Knowledge Engineering · Final Defense</div>
+          <h1>Evidence-Centric HybridRAG</h1>
+          <p>面向 GNN 科研论文的证据质量控制与可验证问答</p>
+        </div>
+      </div>
+      <div class="replay-badge">
+        <span class="pulse-dot"></span>
+        <div>
+          <strong>Evaluation Replay</strong>
+          <span>Canonical Core32 artifact · No live API</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="metrics" aria-label="project metrics">
+      <div class="metric"><span>论文语料</span><strong id="mPapers">12</strong><small>papers</small></div>
+      <div class="metric"><span>有效切块</span><strong id="mChunks">446</strong><small>retrieval chunks</small></div>
+      <div class="metric"><span>知识图谱</span><strong id="mGraph">1,204</strong><small>nodes · 1,761 edges</small></div>
+      <div class="metric"><span>评测集</span><strong>Core69</strong><small>audit-filtered</small></div>
+      <div class="metric accent"><span>Claim Support</span><strong id="mSupport">79.9%</strong><small>159 / 199 claims</small></div>
+    </section>
+
+    <section class="pipeline" aria-label="pipeline">
+      <div class="pipe-step active" data-step="1"><b>01</b><span>Structure-aware<br>Chunking</span></div>
+      <div class="pipe-line"></div>
+      <div class="pipe-step" data-step="2"><b>02</b><span>Vector + Graph<br>Retrieval</span></div>
+      <div class="pipe-line"></div>
+      <div class="pipe-step" data-step="3"><b>03</b><span>Evidence<br>Reranking</span></div>
+      <div class="pipe-line"></div>
+      <div class="pipe-step" data-step="4"><b>04</b><span>Grounded<br>Generation</span></div>
+      <div class="pipe-line"></div>
+      <div class="pipe-step" data-step="5"><b>05</b><span>Claim-level<br>Verification</span></div>
+    </section>
+
+    <section class="workspace">
+      <article class="panel query-panel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">CASE STUDY · <span id="caseQid">C01</span></span>
+            <h2>科研问题</h2>
+          </div>
+          <span class="tag comparison">COMPARISON</span>
+        </div>
+        <div class="query-box" id="queryBox"></div>
+
+        <div class="score-strip" id="scoreStrip">
+          <div>
+            <span>Vector</span>
+            <strong id="scoreVector">—</strong>
+          </div>
+          <div class="arrow">→</div>
+          <div class="warn">
+            <span>Vanilla Hybrid</span>
+            <strong id="scoreHybrid">—</strong>
+          </div>
+          <div class="arrow">→</div>
+          <div class="good">
+            <span>+ Rerank</span>
+            <strong id="scoreRerank">—</strong>
+          </div>
+        </div>
+
+        <div class="answer-shell">
+          <div class="answer-head">
+            <span>Final grounded answer</span>
+            <span class="answer-state" id="answerState">WAITING</span>
+          </div>
+          <div class="answer muted" id="answer">
+            播放演示后，系统将展示经过证据重排后的最终回答。
+          </div>
+        </div>
+      </article>
+
+      <article class="panel graph-panel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">QUERY-SPECIFIC SUBGRAPH</span>
+            <h2>证据图可视化</h2>
+          </div>
+          <div class="legend">
+            <span><i class="dot model"></i>Model</span>
+            <span><i class="dot paper"></i>Paper provenance</span>
+          </div>
+        </div>
+
+        <div class="graph-canvas">
+          <svg id="graphSvg" viewBox="0 0 720 360" role="img" aria-label="query evidence graph">
+            <defs>
+              <marker id="arrowHead" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 z" class="arrow-head"></path>
+              </marker>
+            </defs>
+            <g id="graphEdges"></g>
+            <g id="graphNodes"></g>
+          </svg>
+          <div class="graph-caption" id="graphCaption">
+            Hybrid retrieval 返回的 Graph triples 将在这里形成当前问题的局部证据图。
+          </div>
+        </div>
+      </article>
+
+      <article class="panel evidence-panel">
+        <div class="panel-head compact">
+          <div>
+            <span class="kicker">HETEROGENEOUS EVIDENCE</span>
+            <h2>Evidence Ranking</h2>
+          </div>
+          <div class="toggle-view">
+            <button id="beforeBtn" class="mini active" type="button">Before Rerank</button>
+            <button id="afterBtn" class="mini" type="button">After Rerank</button>
+          </div>
+        </div>
+        <div class="evidence-list" id="evidenceList"></div>
+      </article>
+
+      <article class="panel verify-panel">
+        <div class="panel-head compact">
+          <div>
+            <span class="kicker">POST-HOC VERIFICATION</span>
+            <h2>Claim Verification</h2>
+          </div>
+          <div class="support-ring" id="supportRing">
+            <strong id="caseSupport">—</strong>
+            <span>supported</span>
+          </div>
+        </div>
+        <div class="verify-summary" id="verifySummary">
+          Saved answer hash verified · answer_regenerated=false
+        </div>
+        <div class="claim-list" id="claimList">
+          <div class="empty-state">验证结果将在最后一步显示。</div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="demo-controls">
+      <div class="progress-track"><span id="progressBar"></span></div>
+      <div class="control-copy">
+        <strong id="stepTitle">Ready</strong>
+        <span id="stepDesc">点击播放，依次展示 Hybrid evidence、Reranking、Answer 与 Verification。</span>
+      </div>
+      <div class="control-actions">
+        <button id="resetBtn" class="ghost" type="button">重置</button>
+        <button id="playBtn" class="primary" type="button">▶ 播放演示</button>
+      </div>
+    </footer>
+  </main>
+
+  <script src="demo_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

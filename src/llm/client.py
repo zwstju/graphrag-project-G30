@@ -75,7 +75,17 @@ def generate_answer(prompt: str) -> str:
         data = response.json()
 
     try:
-        return data["choices"][0]["message"]["content"].strip()
+        #return data["choices"][0]["message"]["content"].strip()
+        content = data["choices"][0]["message"]["content"].strip()
+
+        print("\n===== LLM DEBUG =====")
+        print("content repr:", repr(content))
+        print("content length:", len(content))
+        print("finish_reason:", data["choices"][0].get("finish_reason"))
+        print("model:", data.get("model"))
+        print("===== END LLM DEBUG =====\n")
+
+        return content
     except (KeyError, IndexError, TypeError) as exc:
         raise RuntimeError(
             f"Unexpected LLM response format: {data}"

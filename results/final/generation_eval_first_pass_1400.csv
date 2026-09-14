@@ -1,0 +1,390 @@
+﻿qid,qtype,difficulty,method,evidence_count,token_f1,llm_correctness_relevance_score,citation_validity,retrieval_latency_s,generation_latency_s,judge_latency_s,end_to_end_latency_s,answer_attempts,judge_attempts,generation_error,judge_error,answer,judge_reason
+F06,fact,easy,structured_vector,6,0.24,1.0,1.0,0.012192057001811918,2.280893818002369,1.612878814998112,2.2930858750041807,1,1,,,GIN 的设计与 **Weisfeiler-Lehman（WL）图同构测试 / WL subtree kernel** 的判别思想相关。GIN 被设计为可证明地泛化 WL test，从而在基于聚合的 GNN 中达到最大判别能力，并通过学习将子树嵌入低维空间来区分不同图结构 [gin_2019]。,预测答案准确指出 GIN 与 Weisfeiler-Lehman 图同构测试/WL subtree kernel 相关，并正确说明其泛化 WL test 的判别能力，核心事实与参考答案一致。
+F06,fact,easy,structured_vanilla_hybrid,6,0.19999999999999998,1.0,1.0,0.02245498000047519,2.3795808909999323,1.4057588750001742,2.4020358710004075,1,1,,,GIN 的设计与 **WL test（Weisfeiler-Lehman 图同构测试）** 的判别思想相关：GIN 被设计为能够泛化 WL test，并因此在 GNN 中达到最大判别能力 [gin_2019]。证据也指出，WL test 为基于聚合的 GNN 的表征能力提供了上界 [gin_2019]。,预测答案准确指出 GIN 的设计与 Weisfeiler-Lehman（WL）图同构测试相关，与参考答案核心事实一致。
+F06,fact,easy,structured_hybrid_rerank,6,0.3,1.0,1.0,1.7778468540018366,1.811187166000309,1.2418948899976385,3.5890340200021456,1,1,,,GIN（Graph Isomorphism Network）的设计与 **Weisfeiler-Lehman（WL）图同构测试**思想相关；它通过推广 WL 测试来获得最大判别能力 [gin_2019]。,预测准确指出 GIN 的设计与 Weisfeiler-Lehman 图同构测试思想相关，核心事实与参考答案一致且切题。
+F07,fact,easy,structured_vector,6,0.03389830508474576,1.0,1.0,0.011796005997894099,7.3832528889979585,6.143999624000571,7.395048894995853,1,3,,,"DeepWalk 通过**短随机游走**生成节点表示的训练序列：它建模一串短随机游走（stream of short random walks），并使用截断随机游走（truncated random walks）获得的局部信息来学习节点表示 [deepwalk_2014]。这些随机生成的游走序列被当作“句子”，即 DeepWalk 把语言模型从词序列推广到由图上游走组成的特殊语言，并将 walks 视为 sentences 的等价物 [deepwalk_2014]。
+
+具体训练样本的生成方式是：在一条随机游走（如 \(W_{v4}\)）上滑动长度为 \(2w+1\) 的窗口，将窗口中心顶点 \(v1\) 映射为其表示 \(\Phi(v1)\)，窗口内其他顶点（如 \(\{v3, v5\}\)）作为上下文；表示 \(\Phi\) 的更新目标是最大化中心顶点与其上下文共现的概率 [deepwalk_2014]。",预测准确说明了 DeepWalk 通过截断/短随机游走生成节点序列，并将其视为句子用于类似 Skip-gram 的上下文预测训练，核心事实与问题切题。
+F07,fact,easy,structured_vanilla_hybrid,6,0.07142857142857144,,1.0,0.021955598997010384,4.448235993997514,4.969343871001911,4.470191592994524,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),DeepWalk 通过生成**截断随机游走（truncated random walks）**来构造训练序列，并把每条随机游走视为一个“句子”，将游走中的节点视为“词”，从而用神经语言模型学习节点的潜在表示 [deepwalk_2014]。具体地，它建模一串短随机游走，并利用截断随机游走得到的局部信息来学习节点表示 [deepwalk_2014]。所给证据未进一步说明游走起点采样、游走长度、上下文窗口等实现细节。,
+F07,fact,easy,structured_hybrid_rerank,6,,,0.0,1.3587457929970697,21.81546995199824,1.429998519597575e-06,23.17421574499531,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+F08,fact,easy,structured_vector,6,0.08,1.0,1.0,0.011881033999088686,6.330871485999523,1.5097337970000808,6.342752519998612,1,1,,,"在 node2vec 的随机游走中：
+
+- **p 是 return parameter（返回参数）**：控制立即重复访问节点的可能性。高 \(p > \max(q,1)\) 会降低随后两步采样已访问节点的概率，鼓励适度探索并避免 2-hop 冗余；低 \(p < \min(q,1)\) 会使游走回溯一步，使游走保持“局部”，靠近起始节点 \(u\) [node2vec_2016]。
+- **q 是 in-out parameter（出入参数）**：使搜索能够区分“向内”和“向外”节点 [node2vec_2016]。低 \(q\) 鼓励向外探索，但需由低 \(p\) 平衡，以确保游走不会离起始节点太远 [node2vec_2016]。
+- 二者通过转移概率 \(\pi_{vx}=\alpha_{pq}(t,x)\cdot w_{vx}\) 起作用，其中 \(d_{tx}=0\) 时 \(\alpha=1/p\)，\(d_{tx}=1\) 时 \(\alpha=1\)，\(d_{tx}=2\) 时 \(\alpha=1/q\) [node2vec_2016]。
+- 由于 \(d_{tx}\) 只能是 \(\{0,1,2\}\)，\(p\) 和 \(q\) 是引导游走的两个必要且充分的参数 [node2vec_2016]。
+- 总体上，\(p\) 和 \(q\) 控制游走探索和离开起始节点邻域的速度，使搜索可近似在 BFS 与 DFS 之间插值，从而体现对不同节点等价性（如同配性与结构等价性）的偏好 [node2vec_2016",预测准确说明了 p 为返回参数、q 为出入参数，并正确描述二者通过二阶偏置随机游走控制局部 BFS 式与 DFS 式探索的权衡。
+F08,fact,easy,structured_vanilla_hybrid,6,,,0.0,0.022921897998458007,20.53281297400099,2.0330007828306407e-06,20.555734871999448,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+F08,fact,easy,structured_hybrid_rerank,6,0.06944444444444443,1.0,1.0,1.555153759996756,14.223179052998603,1.8397089989994129,15.778332812995359,2,1,,,"在 node2vec 中，\(p\) 和 \(q\) 用于参数化二阶随机游走的转移偏好，从而控制探索方式 [node2vec_2016]。
+
+- 游走刚经过边 \((t,v)\) 并位于 \(v\) 时，选择下一步 \(x\) 的未归一化转移概率为  
+  \(\pi_{vx}=\alpha_{pq}(t,x)\cdot w_{vx}\)，其中
+  - 若 \(d_{tx}=0\)，则 \(\alpha=1/p\)；
+  - 若 \(d_{tx}=1\)，则 \(\alpha=1\)；
+  - 若 \(d_{tx}=2\)，则 \(\alpha=1/q\) [node2vec_2016]。
+  这里 \(d_{tx}\) 是节点 \(t\) 与 \(x\) 的最短路径距离，只能取 \(\{0,1,2\}\)，因此 \(p\) 和 \(q\) 足以指导游走 [node2vec_2016]。
+
+- \(p\) 是 return parameter，控制立即回到已访问节点的可能性 [node2vec_2016]。  
+  高 \(p\)（\(>\max(q,1)\)）会降低接下来两步再次采样已访问节点的概率，鼓励适度探索并避免 2-hop 冗余 [node2vec_2016]。  
+  低 \(p\)（\(<\min(q,1)\)）会使游走向回退一步，使游走保持“local”，靠近起点 \(u\) [node2vec_2016]。
+
+- \(q\) 是 in-out parameter，使搜索能够区分“inward”和“outward”节点 [node2vec_2016]。  
+  \(p\) 和 \(q\) 共同控制游走探索和离开起点 \(u\) 邻域的速度，并允许搜索过程近似地在 BFS 和 DFS 之间插值，从而偏向不同的节点等价性概念 [node2vec_2016]。
+
+- 默认值设为 \(p=q=1\)",预测答案准确说明了 p 是返回参数、q 是进出参数，并正确指出二者共同控制二阶偏置随机游走在 BFS 式局部探索与 DFS 式探索之间的权衡。
+F09,fact,easy,structured_vector,6,0.14285714285714285,1.0,1.0,0.012247091999597615,1.28527271799976,1.0907308549976733,1.2975198099993577,1,1,,,MPNN 框架的前向传播包含两个核心阶段：**消息传递阶段（message passing phase）**和**读出阶段（readout phase）** [mpnn_2017]。,预测准确指出了 MPNN 框架的两个核心阶段，即消息传递阶段和读出阶段，与参考答案一致。
+F09,fact,easy,structured_vanilla_hybrid,6,0.14285714285714285,1.0,1.0,0.02213988799849176,1.8346368019992951,1.192647871997906,1.8567766899977869,1,1,,,MPNN 框架的两个核心阶段是：**消息传递阶段（message passing phase）**和**读出阶段（readout phase）**[mpnn_2017]。,预测答案准确给出了MPNN框架的消息传递阶段和读出阶段两个核心阶段，与参考答案一致。
+F09,fact,easy,structured_hybrid_rerank,6,0.06060606060606061,1.0,1.0,1.6606807079988357,1.662279722000676,0.9340740159968846,3.3229604299995117,1,1,,,"MPNN 框架的前向传播包含两个核心阶段：**消息传递阶段（message passing phase）**和**读出阶段（readout phase）** [mpnn_2017]。
+
+- **消息传递阶段**：运行 T 个时间步，通过消息函数 \(M_t\) 和顶点更新函数 \(U_t\) 更新图中各节点的隐藏状态 [mpnn_2017]。
+- **读出阶段**：使用读出函数 \(R\) 为整个图计算一个特征向量 [mpnn_2017]。",预测答案准确指出了 MPNN 的两个核心阶段：消息传递阶段和读出阶段，与参考答案完全一致且回答切题。
+R03,relation,medium,structured_vector,6,0.0,0.0,0.0,0.011426904002291849,7.273875676000898,1.7793063610006357,7.28530258000319,1,1,,,证据中没有直接出现“固定归一化邻接权重”这一术语；与之对应,预测未回答GAT相比固定归一化邻接权重的变化，仅指出证据中未出现该术语，核心事实缺失。
+R03,relation,medium,structured_vanilla_hybrid,6,0.03571428571428571,1.0,1.0,0.021440363001602236,17.880827259999933,2.0790367310000875,17.902267623001535,1,1,,,"GAT 与固定/常数归一化邻域聚合相比，关键变化是：GAT 通过 masked self-attentional layers，使节点能够对邻域特征施加注意力，从而为同一邻域内的不同节点隐式分配不同权重，而不是使用常数或固定归一化权重 [gat_2018]。证据中将相同架构的常数注意力模型称为 Const-GAT，并把它作为类似 GCN 的聚合方案来比较 [gat_2018]。
+
+性能上，GAT 相比 GCN 在 Cora 和 Citeseer 上分别提升 1.5% 和 1.6%，说明对同一邻域节点分配不同权重可能有益 [gat_2018]。在 PPI 数据集上，GAT 相比相同架构的 Const-GAT 提升 3.9%，直接表明能够给不同邻居分配不同权重是有效的 [gat_2018]。",预测答案准确说明了GAT通过注意力机制为不同邻居学习不同重要性，不再仅使用固定的图结构归一化权重，与参考答案核心事实一致且切题。
+R03,relation,medium,structured_hybrid_rerank,6,0.04255319148936171,1.0,1.0,1.9379070100003446,19.402935825000895,7.775196151000273,21.34084283500124,2,3,,,"与固定归一化邻接权重 / GCN 式恒定聚合相比，GAT 的主要变化是：不再对邻域使用固定或恒定权重，而是用 masked self-attention 在邻域内做 softmax，为同一邻域中的不同节点分配不同（隐式）重要性 [gat_2018]。
+
+证据上，GAT 论文用 Const-GAT（相同架构、constant attention）作为 GCN-like 聚合方案的对照，以评估注意力机制的收益 [gat_2018]。结果：GAT 相对 Const-GAT 在 PPI 上提升 3.9%，直接表明“不同邻居赋予不同",预测答案准确指出 GAT 从固定归一化邻接权重/GCN式恒定聚合变为通过注意力机制学习不同邻居的重要性，与参考答案核心事实一致且切题。
+R05,relation,medium,structured_vector,6,0.1111111111111111,,1.0,0.011823501001344994,6.781422547002876,10.294908663996466,6.793246048004221,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"根据给定证据，**没有直接说明 DeepWalk 与 Skip-gram 的关系**；证据中未出现“Skip-gram”。可追溯的间接信息只有：
+
+- DeepWalk 将神经语言模型推广到由随机游走构成的“特殊语言”上 [deepwalk_2014]。
+- 其重实现使用 TensorFlow word2vec 教程中描述的向量初始化 [graphsage_2017]。
+- node2vec 中将 DeepWalk 的采样策略视为 \(p=1, q=1\) 的特例 [node2vec_2016]。
+
+这些只能说明 DeepWalk 与语言建模/word2vec 有关，**不能据此确认 DeepWalk 与 Skip-gram 的具体关系**。因此，关于该问题，证据不足。",
+R05,relation,medium,structured_vanilla_hybrid,6,0.08695652173913042,0.0,1.0,0.022580726999876788,6.881089874001191,1.435471253000287,6.9036706010010676,1,1,,,"给定证据**没有直接提到 Skip-gram**，因此无法依据现有证据断言 DeepWalk 与 Skip-gram 的具体关系；这部分**证据不足**。
+
+可确认的相关事实是：
+
+- DeepWalk 使用截断随机游走的局部信息作为输入来学习顶点潜在表示，并将自身描述为与语言建模有联系、是语言建模的一种推广 [deepwalk_2014]。
+- 在 GraphSAGE 实验中，DeepWalk 被用纯 TensorFlow 重实现，并采用了 TensorFlow word2vec 教程中的向量初始化等设置 [graphsage_2017]；但该证据并未说明其中使用的是 Skip-gram。
+- 同一证据还指出，DeepWalk 等价于参数 \(p=q=1\) 的 node2vec 模型 [graphsage_2017]，但这同样不直接说明其与 Skip-gram 的关系。
+
+因此，依据给定 Evidence，只能说 DeepWalk 与语言建模/word2vec 实现存在间接关联，但**不能确认其与 Skip-gram 的具体关系**。",预测答案未确认 DeepWalk 使用 Skip-gram 学习节点嵌入，反而称证据不足无法断言，与参考答案的核心事实相矛盾。
+R05,relation,medium,structured_hybrid_rerank,6,0.1111111111111111,1.0,1.0,1.1949135329996352,5.018243673999677,3.681866236998758,6.213157206999313,1,2,,,"DeepWalk 使用 Skip-gram 模型：证据中明确给出 `DeepWalk --USES--> skip-gram model` [sgc_2019]。
+
+具体关系可概括为：
+
+- DeepWalk 将图中的短随机游走序列视为“句子”，把神经语言模型从词序列推广到图上的随机游走序列，从而学习顶点的潜在表示 [deepwalk_2014]。
+- 它把随机游走流作为建模对象，并用神经语言模型处理这种由随机游走构成的“特殊语言” [deepwalk_2014]。
+- 在实现层面，GraphSAGE 复现 DeepWalk 时使用了 TensorFlow word2vec tutorial 中描述的向量初始化等方式 [graphsage_2017]。
+- 同一证据还指出，DeepWalk 等价于 `p = q = 1` 的 node2vec 模型 [graphsage_2017]。",预测答案核心指出 DeepWalk 将随机游走序列视为类似句子的词序列并用 Skip-gram 学习节点嵌入，与参考答案事实一致且切题。
+R07,relation,medium,structured_vector,6,0.04444444444444444,1.0,1.0,0.011862068000482395,7.400271356997109,1.3041794700002356,7.412133424997592,1,1,,,"MPNN 与多个早期图神经网络模型的关系是：**MPNN 是一个统一框架，用于重新表述和描述已有模型，而不是一个与它们完全无关的新模型**。论文明确将已有模型 reformulate 成单一共同框架 Message Passing Neural Networks，并在该框架内探索新变体 [mpnn_2017]。
+
+具体而言：
+
+- 论文指出，文献中至少有八个 notable examples 可以用其 MPNN 框架描述；MPNN 前向过程包括消息传递阶段和读出阶段 [mpnn_2017]。
+- 一类早期图卷积/图神经网络模型，包括 Bruna et al. (2013)、Defferrard et al. (2016)、Kipf & W",预测准确指出 MPNN 是统一框架，用消息传递与读出阶段概括和重述多种已有图神经网络模型，与参考答案核心事实一致且切题。
+R07,relation,medium,structured_vanilla_hybrid,6,0.028985507246376812,1.0,1.0,0.021726789003878366,6.719282880996616,1.9724724139996397,6.741009670000494,1,1,,,"MPNN 在给定证据中主要被定位为一个**统一框架**，用于重述和涵盖多个早期图神经网络模型，而不是与它们完全无关的单一模型。
+
+- 论文将已有模型重新表述为一个共同框架，称为 Message Passing Neural Networks（MPNNs）[mpnn_2017]。
+- 这些早期/相关模型学习消息传递算法和聚合过程，以计算整个输入图的函数 [mpnn_2017]。
+- 至少有八个文献中的模型可以用 MPNN 框架描述 [mpnn_2017]。
+- 具体关系示例：Laplacian based models 与 MPNN 被标注为 RELATED_TO [mpnn_2017]；enn-s2s 和 enn-s2s-ens5 被标注为 EXTENDS MPNN [mpnn_2017]。
+
+因此，MPNN 与多个早期图神经网络模型的关系可概括为：**MPNN 是统一/概括这些模型的消息传递框架，部分模型与 MPNN 相关或扩展 MPNN** [mpnn_2017]。  
+但给定证据未列出全部八个模型名称，也未给出每个模型到 MPNN 的具体映射与差异，这些细节证据不足 [mpnn_2017]。",预测答案准确指出 MPNN 是统一/概括多个早期图神经网络模型的消息传递框架，与参考答案核心事实一致且切题。
+R07,relation,medium,structured_hybrid_rerank,6,0.05263157894736842,0.95,1.0,1.6421020550042158,7.277274975996988,1.7564942070021061,8.919377031001204,1,1,,,"依据给定证据，MPNN 主要是一个统一框架：论文称至少八个文献中的既有模型可以用其 Message Passing Neural Networks（MPNN）框架描述 [mpnn_2017]。在实验比较中，作者将 Molecular Graph Convolutions model (GC, Kearnes et al. 2016) 和 original GG-NN model (Li et al. 2016) 列为 existing",预测答案正确指出 MPNN 是统一框架，可概括多种已有图神经网络模型，与参考答案核心事实一致；仅未明确提到读出形式。
+R09,relation,medium,structured_vector,6,0.04081632653061224,1.0,1.0,0.011578974997974001,5.812579574998381,1.120572252002603,5.824158549996355,1,1,,,"SGC 可视为 GCN 的简化线性模型：GCN 通过多层网络反复变换特征，最后接线性分类器；SGC 将整个过程简化为一次简单的特征传播，再接标准 logistic regression [sgc_2019]。
+
+具体关系包括：
+
+- 构造上，SGC 通过反复移除 GCN 层间的非线性，并将结果折叠为单一线性变换，从而降低 GCN 的过度复杂度，参数更少、计算更高效 [sgc_2019]。
+- 它保留了 GCN 中的重复图传播，但去掉了非线性特征提取 [sgc_2019]。
+- 性能上，SGC 与 GCN 及其他 state-of-the-art 图神经网络相当，且显著更快；在最大数据集 Reddit 上比 Fast-GCN 快至多两个数量级 [sgc_2019]。
+- 在下游任务中，SGC 在文本分类、用户地理定位、关系抽取、零样本图像分类等任务上可与 GCN 类方法媲美甚至超过 [sgc_2019]。
+- 有实验论述称，SGC 至少具有与 GCN 相同的建模能力 [sgc_2019]。
+- 结论认为，GCN 的表达能力很可能主要来自重复图传播（SGC 保留），而非非线性特征提取（SGC 不保留）[sgc_2019]。
+
+因此，SGC 不是与 GCN 无关的模型，而是对 GCN 的线性化、简化版本，并试图保留其关键图传播机制 [sgc_2019]。",预测准确说明SGC是对GCN的简化/线性化：去掉中间非线性并折叠多层传播，最终接近线性分类器，核心事实与参考答案一致。
+R09,relation,medium,structured_vanilla_hybrid,6,0.07017543859649122,,1.0,0.029401564999716356,5.6334189789995435,5.6952728670003125,5.66282054399926,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"SGC 与 GCN 密切相关，证据中直接给出 `SGC --RELATED_TO--> GCN` [sgc_2019]。  
+具体而言，SGC 保留 GCN 的重复图传播，但不包含非线性特征提取；证据推测 GCN 的表达能力可能主要来自重复图传播而非非线性特征提取 [sgc_2019]。  
+在建模能力上，证据表明 SGC 至少具有与 GCN 相同的建模容量 [sgc_2019]。  
+在性能上，SGC 与 GCN 及其他先进图神经网络性能相当，但显著更快，在 Reddit 上甚至比 Fast-GCN 快达两个数量级；在文本分类、用户地理定位、关系抽取和零样本图像分类等任务中，SGC 与基于 GCN 的方法相当或更优 [sgc_2019]。",
+R09,relation,medium,structured_hybrid_rerank,6,0.06451612903225806,1.0,1.0,1.3975970019964734,7.002057285000774,1.8940699160011718,8.399654286997247,1,1,,,"SGC 是 GCN 的**线性简化模型**：作者通过反复移除 GCN 层间非线性，并把结果折叠为单个线性变换，从而得到 SGC [sgc_2019]。换言之，GCN 建立在多层神经网络上，而 SGC 被设计为“本可先于 GCN”的最简线性前身 [sgc_2019]。
+
+二者在结构上的关系是：GCN 在 K 层中反复变换特征，再对最终表示做线性分类；SGC 则把整个过程归约为一次简单的特征传播，再接标准逻辑回归 [sgc_2019]。因此，SGC 可看作 GCN 的简化/线性化对应物，而非其复杂非线性扩展 [sgc_2019]。
+
+实验上，SGC 与 GCN 性能相当甚至更优，同时计算更高效、参数显著更少 [sgc_2019]。例如，SGC 在 Reddit 上可比 Fast-GCN 快达两个数量级 [sgc_2019]；在文本分类中 SGC（K=2）可与 2 层 GCN 竞争且快达 83.6 倍 [sgc_2019]。SGC 也能替换下游模型中的 GCN：C-GCN 换成 C-SGC 后在 TACRED",预测准确说明了 SGC 是 GCN 的线性简化模型，去除非线性并将多层传播折叠为单次特征传播，核心事实与参考答案一致且切题。
+R11,relation,medium,structured_vector,6,0.07017543859649124,1.0,1.0,0.011680296000122325,15.204305629002192,4.797035034000146,15.215985925002315,2,2,,,"Cluster-GCN 是面向大图 GCN 训练可扩展性的算法：它利用图聚类结构进行 SGD 训练，每步采样与稠密子图关联的节点块，并把邻域搜索限制在该子图内，从而显著改善内存和计算效率 [cluster_gcn_2019]。
+
+它针对的问题是：现有 SGD 算法要么计算成本随 GCN 层数指数增长，要么需要大量内存保存整个图和每个节点嵌入 [cluster_gcn_2019]。为测试可扩展性，作者创建 Amazon2M，包含 200 万节点、6100 万边，比此前最大公开数据集 Reddit 大 5 倍以上 [cluster_gcn_2019]。
+
+在大图实验上，Cluster-GCN 训练 3 层 GCN 比 VR-GCN 更快，且内存更少：",准确说明 Cluster-GCN 通过图聚类并以簇或子图构造小批量、限制邻域扩展，从而降低内存与计算开销并提升大图训练可扩展性，核心事实与参考答案一致且切题。
+R11,relation,medium,structured_vanilla_hybrid,6,0.02962962962962963,,1.0,0.022159485997690354,8.332425316999434,7.808937917001458,8.354584802997124,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"Cluster-GCN 是面向大图 GCN 训练可扩展性问题提出的算法：它利用图聚类结构进行 SGD 训练，以缓解大图训练中的内存和计算瓶颈 [cluster_gcn_2019]。
+
+关系可概括为：
+
+- **针对的问题**：训练大规模 GCN 仍然困难；现有 SGD 类算法要么计算成本随 GCN 层数指数增长，要么需要保存整图和每个节点嵌入，导致内存需求过大 [cluster_gcn_2019]。
+- **方法关系**：Cluster-GCN 在每一步采样与图聚类算法识别出的稠密子图相关联的节点块，并把邻域搜索限制在该子图内，从而显著提升内存和计算效率，同时取得与先前算法相当的测试精度 [cluster_gcn_2019]。
+- **规模化验证**：为测试可扩展性，作者构建 Amazon2M 数据，包含 200 万以上节点和 6100 万条边，比此前最大公开数据集 Reddit 大 5 倍以上 [cluster_gcn_2019]。在该数据上训练 3 层 GCN 时，Cluster-GCN 比当时最优的 VR-GCN 更快（1523 秒 vs 1961 秒），且内存更少（2.2GB vs 11.2GB）[cluster_gcn_2019]。
+- **深层大图训练**：在 Amazon2M 上训练 4 层 GCN，Cluster-GCN 约 36 分钟完成，而所有现有 GCN 训练算法因 out-of-memory 无法训练 [cluster_gcn_2019]。其复杂度对层数 L 是线性的，而 VR-GCN 的复杂度对 L 是指数级的，因此层数更深时 Cluster-GCN 可更快 [cluster_gcn_2019]。
+- **可扩展性收益**：Cluster-GCN 允许训练更深 GCN 而无需过多时间和内存开销，并提升预测精度；例如 5 层 Cluster-GCN",
+R11,relation,medium,structured_hybrid_rerank,6,0.038461538461538464,,1.0,1.6157717629976105,6.3353214470007515,10.063982292998844,7.951093209998362,1,3,,"attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: SSLError(MaxRetryError(""HTTPSConnectionPool(host='api.deepseek.com', port=443): Max retries exceeded with url: /chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1082)')))""))","Cluster-GCN 与大图训练可扩展性的关系是：Cluster-GCN 正是为缓解/解决大规模 GCN 训练中的可扩展性瓶颈而提出的算法 [cluster_gcn_2019]。
+
+- 它通过利用图聚类结构来进行 SGD 训练：每一步采样与图聚类识别出的稠密子图相关的一批节点，并把邻域搜索限制在该子图内 [cluster_gcn_2019]。
+- 这种策略显著提升了内存和计算效率，同时能达到与先前算法相当的测试准确率 [cluster_gcn_2019]。
+- 在内存上，Cluster-GCN 只需存储当前 batch 内的节点嵌入，即 O(bFL)，而 VR-GCN 需要存储所有中间嵌入，即 O(NFL)，当节点数达到百万级时后者可能无法放入 GPU [cluster_gcn_2019]。
+- 在计算与收敛上，Cluster-GCN 每 epoch 的时间成本与梯度下降相同，且快于邻域搜索方法，收敛速度与其他 SGD 方法具有竞争力 [cluster_gcn_2019]。
+- 为测试可扩展性，作者构建了 Amazon2M：200 万节点、6100 万边，比此前最大公开数据集 Reddit 大 5 倍以上；在 3 层 GCN 上，Cluster-GCN 比 VR-GCN 更快（1523 秒 vs 1961 秒）且内存更少（2.2GB vs 11.2GB）[cluster_gcn_2019]。
+- 在该数据上训练 4 层",
+C01,comparison,medium,structured_vector,6,,,0.0,0.011452385999291437,26.502073865001876,2.0979969121981412e-06,26.513526251001167,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C01,comparison,medium,structured_vanilla_hybrid,6,0.06896551724137931,,1.0,0.029450512000039453,14.333682950000366,11.52277777999916,14.363133462000405,2,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"根据现有证据，GraphSAGE 的卷积变体被描述为 Kipf et al. 半监督 GCN 的“扩展、归纳版本”（extended, inductive version），并被称为 GraphSAGE-GCN [graphsage_2017]。GraphSAGE 还在实验中执行对训练期间未见节点的预测，并在 PPI 数据集上测试完全未见的图 [graphsage_2017]。此外，证据中有三元组表明 GraphSAGE 扩展了 GCN [graphsage_2017]。
+
+因此，就可追溯的区别而言：证据支持 GraphSAGE 明确面向并评估归纳场景，而所对比的 GCN 在该表述中是半监督 GCN [graphsage_2017]。关于 GCN 本身是否具备归纳能力、其归纳能力弱于 GraphSAGE 的具体程度，现有证据不足，不能进一步断言。",
+C01,comparison,medium,structured_hybrid_rerank,6,0.05263157894736842,,1.0,1.6863440369997988,23.466905515997496,6.268266875998961,25.153249552997295,3,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Unterminated string starting at: line 1 column 21 (char 20)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"证据支持的核心区别是：**GraphSAGE 被明确用于/设计为归纳式（inductive）设置，而原版 GCN 在证据中被归为 transductive；GraphSAGE-GCN 则是 GCN 的归纳式扩展版本。**
+
+- GraphSAGE 的实验设置明确包含归纳预测：在训练中未见的节点上做预测，且在 PPI 数据集上在完全未见的图上测试 [graphsage_2017]。
+- 证据称 GraphSAGE 的“卷积”变体是 Kipf 等人半监督 GCN 的 **extended, inductive version**，并命名为 GraphSAGE-GCN [graphsage_2017]。
+- 在结果表中，原版 GCN 被列在 **Transductive** 方法下，例如 Cora/Citeseer/Pubmed 上的 GCN [gat_2018]。
+- 在 **Inductive** 的 PPI 结果表中，列出的归纳方法是 GraphSAGE 各变体以及 GAT/Const-GAT；其中 GraphSAGE-GCN 的 F1",
+C02,comparison,medium,structured_vector,6,0.046511627906976744,1.0,1.0,0.011782478999521118,13.898459343003196,1.7127868749994377,13.910241822002718,2,1,,,"- **GCN**：邻居聚合权重由图的归一化邻接矩阵决定，即使用 \(\tilde{A}=D^{-1/2}AD^{-1/2}\) 进行传播；它不是通过注意力机制为同一邻域内不同邻居动态分配不同权重 [vgae_2016]。  
+- **GAT**：使用注意力机制，对同一邻域中的不同节点分配不同权重。论文明确指出，“assigning different weights to nodes of a same neighborhood may be beneficial”，并用 Const-GAT（常量注意力，即 GCN-like aggregation scheme，且架构相同）作对照 [gat_2018]。  
+- **效果证据**：GAT 相比 GCN 在 Cora 和 Citeseer 上分别提升 1.5% 和 1.6%；在 PPI 上相比 Const-GAT 提升 3.9%，论文称这直接表明“为不同邻居分配不同权重”的意义 [gat_2018]。  
+
+因此，依据给定证据：**GCN 的邻居权重来自固定的归一化邻接矩阵；GAT 的邻居权重来自注意力机制，可为不同邻居分配不同权重** [vgae_2016][gat_2018]。",预测准确指出GCN使用归一化邻接矩阵的固定传播权重，而GAT通过注意力机制为不同邻居动态分配权重，核心事实与参考答案一致且切题。
+C02,comparison,medium,structured_vanilla_hybrid,6,0.1142857142857143,,1.0,0.03024409199861111,7.172709695998492,5.9241558620014985,7.202953787997103,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"- GAT 能为同一邻域内的不同邻居分配不同权重；证据中明确指出其相对 GCN 的提升“暗示给同一邻域节点分配不同权重可能有益” [gat_2018]。  
+- 作为对照的 Const-GAT 使用 constant attention，被描述为 **GCN-like aggregation scheme**；GAT 相比 Const-GAT 提升 3.9%，这被用来直接说明“能给不同邻居分配不同权重”的重要性 [gat_2018]。",
+C02,comparison,medium,structured_hybrid_rerank,6,0.05128205128205129,,1.0,1.984988970001723,6.766801595000288,7.269356362001417,8.751790565002011,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"- **GAT**：通过注意力机制，能够给**同一邻域内的不同邻居分配不同权重**。GAT 论文指出，其相对 GCN 在 Cora 和 Citeseer 上分别提升 1.5% 和 1.6%，说明“给同一邻域中的节点分配不同权重”可能有益 [gat_2018]。  
+- **GCN / GCN-like 聚合**：在 GAT 论文的对照实验中，使用 **constant attention GAT（Const-GAT）** 作为与 GCN 类似聚合方案的对照，即具有相同架构但采用恒定注意力机制 [gat_2018]。GAT 相对 Const-GAT 提升 3.9%，被作者用来直接证明“给不同邻居分配不同权重”的重要性 [gat_2018]。  
+- **关系**：GAT 与 GCN 相关，但在邻居权重分配上，GAT 的核心区别是可学习/注意力式地区分不同邻居；GCN-like 聚合在对照中不提供这种邻居间差异化权重 [gat_2018]。  
+
+证据未给出 GCN 具体归一化权重公式，因此不能进一步展开 GCN 内部权重计算细节。",
+C03,comparison,medium,structured_vector,6,0.11940298507462686,,1.0,0.011594740000873571,6.651617396000802,5.884904430000461,6.663212136001675,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"- DeepWalk 使用**均匀随机游走**（uniform random walks）来搜索网络邻域 [node2vec_2016]。其明显局限是：这种策略**无法控制所探索的邻域** [node2vec_2016]。
+- node2vec 的搜索策略可通过参数 **p 和 q** 进行调节，因而在探索网络邻域时**既灵活又可控** [node2vec_2016]。
+- 两者关系上，DeepWalk 的采样策略可视为 node2vec 在 **p = 1、q = 1** 时的特例 [node2vec_2016]；GraphSAGE 也指出 DeepWalk 等价于 **p = q = 1** 的 node2vec 模型 [graphsage_2017]。
+
+因此，就随机游走而言：DeepWalk 是固定的均匀游走，而 node2vec 是通过 p、q 参数控制的更一般化游走；Deep",
+C03,comparison,medium,structured_vanilla_hybrid,6,0.13559322033898305,,1.0,0.03005891700013308,4.968349713999487,6.909926184001961,4.99840863099962,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"主要区别在游走策略的控制能力：
+
+- DeepWalk 使用**均匀随机游走**（uniform random walks），其明显限制是无法控制所探索的邻域 [node2vec_2016]。
+- node2vec 的搜索策略更**灵活且可控**，通过参数 \(p\) 和 \(q\) 来探索网络邻域 [node2vec_2016]。
+- 当 \(p=q=1\) 时，DeepWalk 等价于 node2vec 模型；因此 DeepWalk 可视为 node2vec 在该参数设置下的特例 [graphsage_2017]。
+- node2vec 被描述为对 DeepWalk 的扩展 [node2vec_2016][gcn_2017]。
+
+关于 \(p\) 和 \(q\) 具体如何控制游走偏向的细节，给定证据未展开，证据不足。",
+C03,comparison,medium,structured_hybrid_rerank,6,0.125,0.3,0.0,1.6565616900006717,13.770894279998174,3.58456028600267,15.427455969998846,2,2,,,"主要区别在随机游走的探索策略：
+
+- DeepWalk 使用**均匀随机游走**（uniform random walks）；这种",预测正确指出 DeepWalk 使用均匀/无偏随机游走，但未说明 node2vec 通过 p、q 参数进行二阶偏置游走这一核心区别，回答不完整。
+C04,comparison,medium,structured_vector,6,,,0.0,0.015766425000037998,22.342148043000634,2.1279993234202266e-06,22.357914468000672,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C04,comparison,medium,structured_vanilla_hybrid,6,,,0.0,0.036707630002638325,23.633136239001033,1.8239989003632218e-06,23.66984386900367,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C04,comparison,medium,structured_hybrid_rerank,6,,,0.0,1.903684824002994,24.889879143000144,1.5329969755839556e-06,26.793563967003138,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C05,comparison,medium,structured_vector,6,0.10526315789473684,1.0,1.0,0.011741859998437576,7.564493099998799,7.714007591999689,7.576234959997237,1,3,,,"普通节点级 GNN 的目标是有效学习节点嵌入，用于节点分类、链接预测等任务；这类方法本质上是 flat 的，不学习图的层次表示 [diffpool_2018]。用于图分类时，标准做法也是先生成所有节点嵌入，再全局池化得到整图表示，因此会忽略图中可能存在的层次结构 [diffpool_2018]。
+
+DiffPool 的目标是学习图的层次化表示，并服务于整图分类：它是一个可微图池化模块，可与 GNN 端到端结合，在每一层学习节点的可微软簇分配，把节点映射到簇，簇再作为下一层 GNN 的粗化输入 [diffpool_2018]。它允许构建深层 GNN，逐层池化、粗化图，最后生成对应整个图的最终嵌入向量，用于整图标签预测 [diffpool_2018]。
+
+因此，普通节点级 GNN 的目标核心在节点级嵌入及相关节点/边任务；DiffPool 的目标核心是通过可微层次池化，把节点级表示逐步聚合为图级、层次化表示，以预测整图标签 [diffpool_2018]。",预测答案准确指出普通节点级 GNN 关注节点表示更新，而 DiffPool 进一步学习节点到簇的分配并构建粗化图以进行层次化图表示，核心事实与参考答案一致且切题。
+C05,comparison,medium,structured_vanilla_hybrid,6,0.07692307692307691,,1.0,0.02922958999624825,13.698334742999577,6.353111166001327,13.727564332995826,2,3,,attempt 1: JSONDecodeError('Unterminated string starting at: line 1 column 12 (char 11)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"- 普通/现有 GNN 方法本质上是“平坦的”，学习有效节点嵌入，主要用于节点分类、链接预测等节点级任务，不学习图的层次表示 [diffpool_2018]。
+- 对图分类任务，目标是预测整个图的标签；普通 GNN 的平坦结构在此受限 [diffpool_2018]。
+- DIFFPOOL 的目标是生成图的层次表示，可与 GNN 端到端结合，用于图分类等图级任务 [diffpool_2018]。
+- DIFFPOOL 在每层学习可微的软聚类分配，将节点映射到一组簇，并形成下一 GNN 层的粗化输入 [diffpool_2018]。
+- 它用 GNN 既提取对图分类有用的节点嵌入，也提取对层次池化有用的节点嵌入；池化会生成粗化邻接矩阵和簇级嵌入 [diffpool_2018]。
+- DIFFPOOL 本身使用 GNN [diffpool_2018]。",
+C05,comparison,medium,structured_hybrid_rerank,6,0.08955223880597014,1.0,1.0,1.420175830997323,13.555421253000532,1.6824609780014725,14.975597083997854,2,1,,,"就给定证据看，差异主要在**是否学习层次化图池化/粗化表示**：
+
+- 普通节点级 GNN 在整图分类中的标准做法是：先为图中所有节点生成嵌入，再把这些节点嵌入全局池化（如求和或作用于集合的神经网络）得到整图表示。该做法忽略图中可能存在的层次结构，不利于构建面向整图预测的有效 GNN 模型 [diffpool_2018]。
+- DIFFPOOL 的目标不是只做节点级嵌入后全局池化，而是提供一个**可微图池化模块**，以**层次化、端到端**方式学习节点到簇的软分配，并在每一层把输入图逐层粗化，从而生成图的层次表示 [diffpool_2018]。
+- 具体地，DIFFPOOL 学习每层的簇分配矩阵，将节点/cluster 映射到下一层 cluster；输入节点对应上一层学到的 cluster，因此每层 DIFFPOOL 会越来越粗化图，并最终用输出表示进行整图分类 [diffpool_2018]。
+- 因此，普通节点级 GNN 的关键是“节点嵌入 + 全局池化”，而 DIFFPOOL 的关键是“用 GNN 学可微层次池化，层层聚类/粗化图，学习整图的层次化表示” [diffpool_2018]。",预测准确指出普通节点级GNN侧重节点表示/嵌入后进行全局池化，而DiffPool进一步学习节点到簇的可微软分配并逐层粗化图以得到层次化图表示，与参考答案核心事实一致且切题。
+C09,comparison,medium,structured_vector,6,,,0.0,0.011667029997624923,23.240790628999093,1.3829994713887572e-06,23.25245765899672,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C09,comparison,medium,structured_vanilla_hybrid,6,,,0.0,0.030469077995803673,22.115979468999285,1.0809999366756529e-06,22.14644854699509,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C09,comparison,medium,structured_hybrid_rerank,6,,,0.0,1.486461579996103,21.109906811001565,3.498000296531245e-06,22.596368390997668,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C11,comparison,medium,structured_vector,6,,,0.0,0.011740400001144735,23.63191380599892,1.5270015865098685e-06,23.643654206000065,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+C11,comparison,medium,structured_vanilla_hybrid,6,0.3,0.0,0.0,0.031589622998581035,7.446309808998194,1.6664631310013647,7.477899431996775,1,1,,,"依据给定证据，**无法确定 DeepWalk/node2vec 与 GCN 类方法在表示学习信号上的根本区别**；证据不足。
+
+可确认的相关事实只有：
+
+- DeepWalk 等价于 node2vec 在参数 \(p=q=",预测未回答 DeepWalk/node2vec 与 GCN 在表示学习信号上的根本区别，反而称无法确定，与参考答案的核心事实不符。
+C11,comparison,medium,structured_hybrid_rerank,6,,,0.0,1.717465544003062,23.84332738699959,2.4080000002868474e-06,25.560792931002652,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+M02,multi_hop,hard,structured_vector,6,0.08080808080808081,,1.0,0.011667843999020988,8.819387698000355,6.874060305999592,8.831055541999376,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"应选 **node2vec** [node2vec_2016]。
+
+原因是 node2vec 设计了灵活的带偏随机游走，可**近似在 BFS 与 DFS 之间插值** [node2vec_2016]。其中关键参数是 **in-out parameter \(q\)**：当 \(q>1\) 时，随机游走偏向接近节点 \(t\) 的节点，获得局部视角，近似 BFS 行为；当 \(q<1\) 时，游走更倾向访问远离 \(t\) 的节点，体现 DFS 的外向探索 [node2vec_2016]。此外，**return parameter \(p\)** 控制立即回访概率：高 \(p\) 减少已访问节点采样、鼓励适度探索；低 \(p\) 会使游走回退并保持接近起点 \(u\) 的局部性 [node2vec_2016]。node2vec 通过 \(p\) 和 \(q\) 两个参数必要且充分地引导游走，使其能够反映 BFS/DFS 倾向 [node2vec_2016]。因此，若要控制 BFS/DFS 倾向，应选 node2vec，并通过 \(q\) 调节：\(q>1\) 偏 BFS，\(q<1\) 偏 DFS [node2vec_2016]。",
+M02,multi_hop,hard,structured_vanilla_hybrid,6,0.057692307692307696,1.0,1.0,0.029353083999012597,5.4008163409998815,3.892093616999773,5.430169424998894,1,1,,,"应选择 **node2vec** [node2vec_2016]。
+
+原因：node2vec 设计了一个灵活的有偏随机游走过程，可以通过参数 **p 和 q** 在 BFS 与 DFS 之间进行（近似）插值，从而控制采样的探索倾向 [node2vec_2016]。其中：
+
+- **q 是 in-out 参数**，用于区分“向内”和“向外”节点：  
+  - 若 **q > 1**，随机游走偏向靠近节点 \(t\) 的节点，获得局部视图，近似 **BFS** 行为 [node2vec_2016]。  
+  - 若 **q < 1**，游走更倾向于访问远离 \(t\) 的节点，反映 **DFS** 的向外探索行为 [node2vec_2016]。
+
+- **p 是 return 参数**，控制立即回访节点的可能性：  
+  - 高 \(p\) 降低在接下来两步中采样已访问节点的概率，鼓励适度探索并避免 2-hop 冗余 [node2vec_2016]。  
+  - 低 \(p\) 会引导游走回溯一步，使游走保持在起始节点 \(u\) 附近的局部区域 [node2vec_2016]。
+
+因此，若目标是选择一个能控制 BFS/DFS 倾向的随机游走模型，node2vec 是合适选择，因为其参数 \(p\) 和 \(q\) 足以指导游走，并允许在 BFS 与 DFS 之间平滑插值 [node2vec_2016]。",预测正确选择 node2vec，并准确说明其通过 p、q 参数控制 BFS/DFS 探索倾向，与参考答案核心事实一致且切题。
+M02,multi_hop,hard,structured_hybrid_rerank,6,0.10256410256410256,,1.0,1.1767568639988895,7.951921012001549,8.428453181000805,9.128677876000438,1,3,,attempt 1: JSONDecodeError('Unterminated string starting at: line 1 column 21 (char 20)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"应选 **node2vec** [node2vec_2016]。
+
+原因是它设计了灵活的有偏随机游走，能够在 **BFS 与 DFS 之间平滑插值**，从而控制搜索的局部性与外扩性 [node2vec_2016]。具体地，node2vec 通过参数 \(p\) 和 \(q\) 调节转移概率：  
+- \(q>1\) 时，随机游走偏向靠近节点 \(t\) 的节点，近似 **BFS** 行为；  
+- \(q<1\) 时，游走更倾向访问远离 \(t\) 的节点，体现 **DFS** 式外扩探索 [node2vec_2016]。  
+此外，参数 \(p\) 控制立即回访的可能性：高 \(p\) 鼓励适度探索，低 \(p\) 使游走更“局部”地靠近起始节点 [node2vec_2016]。因此，若要控制 BFS/DFS 倾向，node2vec 的 \(p,q\) 偏置随机游走是合适选择，并可在随机游走框架内实现 BFS/DFS 式邻域采样 [node2vec_2016]。",
+M04,multi_hop,hard,structured_vector,6,0.11764705882352942,1.0,0.0,0.01180700899931253,7.775216221998562,3.786273138000979,7.787023230997875,1,2,,,"符合描述的是 **GAT 模型**（论文 `gat_2018` 中的 GAT）。
+
+依据如下：
+
+- GAT 通过注意力机制聚合",预测明确给出正确答案GAT，并提及通过注意力机制聚合，核心事实与参考答案一致。
+M04,multi_hop,hard,structured_vanilla_hybrid,6,0.07547169811320754,1.0,1.0,0.021658920995832887,7.213035583998135,2.9218138979995274,7.234694504993968,1,1,,,"在给定证据中，符合的是 **GAT（Graph Attention Network）** [gat_2018]。
+
+理由：
+- GAT 通过注意力机制对邻居赋权，允许对同一邻域中的不同节点分配不同权重/重要性 [gat_2018]。
+- 证据指出，与 GCN 不同，GAT 可以（隐式地）为同一邻域中的节点分配不同重要性；并且相对于 constant attention 的 Const-GAT，GAT 通过给不同邻居不同权重取得提升 [gat_2018]。
+- GAT 的注意力机制以共享方式应用于图中所有边，不依赖预先访问全局图结构或所有节点特征；其注意力架构可对不同度数的图节点通过给邻居指定任意权重来处理 [gat_2018]。
+
+因此，答案是 **GAT（Graph Attention Network）** [gat_2018]。",预测答案正确指出 GAT，并说明其通过注意力为邻居赋权、学习数据相关权重，核心事实与参考答案一致且切题。
+M04,multi_hop,hard,structured_hybrid_rerank,6,0.13043478260869565,1.0,1.0,0.8560100579961727,7.573963434999314,1.739952424999501,8.429973492995487,1,1,,,"满足条件的是 **GAT（Graph Attention Network）** [gat_2018]。
+
+依据：GAT 使用 masked attention，对邻居 \(j \in N_i\) 计算注意力系数，并用 softmax 归一化为 \(\alpha_{ij}\)，再用 \(\alpha_{ij}\) 对邻居特征加权聚合 [gat_2018]。与 GCN 不同，GAT 允许对同一邻域内不同节点隐式分配不同重要性 [gat_2018]。其注意力权重由节点特征经注意力机制计算得到，而不是固定卷积核权重 [gat_2018]。",预测答案明确指出 GAT，并正确说明其使用 masked self-attention 为邻居学习数据相关权重、避免固定卷积核权重，与参考答案核心事实一致。
+M07,multi_hop,hard,structured_vector,6,0.12121212121212122,1.0,1.0,0.012643687001400394,5.246628387001692,3.556138629999623,5.259272074003093,1,1,,,"最符合的是 **Simple Graph Convolution (SGC)**。
+
+理由：SGC 通过不断去除 GCN 层间非线性，并折叠连续层之间的权重矩阵，得到一个线性模型；该模型可理论解释为“固定低通滤波器 + 线性分类器”，因此保留了 GCN 的传播思想，同时去掉了层间非线性和多层权重 [sgc_2019]。论文明确称这个简化线性模型为 **Simple Graph Convolution (SGC)** [sgc_2019]。",预测答案正确指出最符合的模型是 SGC，并准确说明其去除层间非线性、折叠多层权重且保留 GCN 传播思想，核心事实与参考答案一致。
+M07,multi_hop,hard,structured_vanilla_hybrid,6,0.21052631578947364,1.0,1.0,0.02443388600295293,2.599427064997144,5.006622584998695,2.623860951000097,1,1,,,最符合的是 **SGC（Simple Graph Convolution）**。它通过逐步去除层间非线性并折叠相邻层之间的权重矩阵，将模型简化为“固定低通滤波器 + 线性分类器”，从而保留 GCN 的传播思想但去掉多层权重和非线性 [sgc_2019]。,预测准确指出 SGC，并正确说明其通过线性化去除层间非线性、折叠多层权重，同时保留 GCN 传播思想，与参考答案核心事实一致。
+M07,multi_hop,hard,structured_hybrid_rerank,6,0.1818181818181818,1.0,1.0,1.6196688630043354,2.4261069640015194,1.7416330140003993,4.045775827005855,1,1,,,"最符合的是 **Simple Graph Convolution (SGC)** [sgc_2019]。
+
+依据 Evidence：SGC 通过反复移除 GCN 层间非线性，并将多层结果折叠为单一线性变换，从而保留图传播思想但去掉层间非线性和多层权重 [sgc_2019]。",预测答案正确指出 SGC，并准确说明其通过线性化去除层间非线性、折叠多层传播，与参考答案核心事实一致。
+M08,multi_hop,hard,structured_vector,6,0.028985507246376812,1.0,1.0,0.011581834001844982,3.2708378009992884,14.744351207002182,3.2824196350011334,1,2,,,"**PPNP（personalized propagation of neural predictions）** 及其快速近似 **APPNP** 将“神经预测”与“类 Personalized PageRank 的传播”分成两个阶段：先由神经网络基于每个节点自身特征独立生成预测 H = f_θ(X)，再通过个性化 PageRank 方案传播得到最终预测 [appnp_2019]。
+
+具体而言，PPNP 的模型方程为
+Z_PPNP = softmax(α (I_n − (1−α)Â)^(−1) H)，其中 H_i,: = f_θ(X_i,:)，从而将生成预测的神经网络与传播方案分离 [appnp_2019]。该分离使神经网络深度与传播算法完全独立，并可在推理时先预测、再传播（训练仍为端到端，梯度会流经传播方案）[appnp_2019]。论文也明确指出，PPNP 解耦了预测与传播（decouples prediction and propagation）[appnp_2019]，并在引言中说明其算法将神经网络与传播方案分离 [appnp_2019]。",预测正确指出APPNP（及PPNP）将神经预测与PPR风格传播分为先预测再传播两阶段，核心事实与参考答案一致且切题。
+M08,multi_hop,hard,structured_vanilla_hybrid,6,0.06666666666666667,1.0,1.0,0.02235341900086496,2.4327514590004284,6.271073002000776,2.4551048780012934,1,3,,,PPNP 及其快速近似 APPNP 将神经预测与类似 Personalized PageRank 的传播分成两个阶段：先由神经网络根据每个节点自身特征生成预测，再用 Personalized PageRank 的变体进行传播 [appnp_2019]。该模型被称为 personalized propagation of neural predictions (PPNP)，其快速近似为 APPNP [appnp_2019]。,正确指出 PPNP 及其快速近似 APPNP 将神经预测与类似 Personalized PageRank 的传播分为两个阶段，核心事实与参考答案一致。
+M08,multi_hop,hard,structured_hybrid_rerank,6,0.02777777777777778,,1.0,1.0690764330029197,3.9070304030028637,5.01902034700106,4.976106836005783,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"是 **PPNP（Personalized Propagation of Neural Predictions）**，其快速近似 **APPNP** 也采用同样思路。
+
+PPNP 先用神经网络 \(f_\theta\) 对每个节点的特征独立生成预测 \(H\)，再通过 fully personalized PageRank 形式的传播得到最终预测，从而把“生成神经预测”和“传播”分开 [appnp_2019]。论文明确指出：**PPNP separates the neural network used for generating predictions from the propagation scheme** [appnp_2019]。APPNP 则通过幂迭代近似该 topic-sensitive PageRank 传播，其中预测矩阵 \(H\) 同时作为起始向量和 teleport set [appnp_2019]。结论也说明 PPNP 和 APPNP **decouples prediction and propagation** [appnp_2019]。",
+M10,multi_hop,hard,structured_vector,6,,,0.0,0.013235999998869374,23.83954131399878,1.4549987099599093e-06,23.85277731399765,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+M10,multi_hop,hard,structured_vanilla_hybrid,6,,,0.0,0.03258038599960855,22.82988028100226,1.5730001905467361e-06,22.86246066700187,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+M10,multi_hop,hard,structured_hybrid_rerank,6,,,0.0,1.3224953939970874,26.31513816200095,1.4729994290973991e-06,27.637633555998036,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+CF15,fact,medium,structured_vector,6,0.4,0.0,0.0,0.01158079300148529,9.256941125000594,1.182272762998764,9.26852191800208,1,1,,,GAT 使用,预测答案不完整，仅重复问题开头，未说明GAT使用多头注意力的原因。
+CF15,fact,medium,structured_vanilla_hybrid,6,0.027777777777777776,,1.0,0.03043688100297004,4.1937258660000225,12.800946887000464,4.2241627470029925,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"GAT 使用 multi-head attention，主要是为了**稳定 self-attention 的学习过程**；论文指出将机制扩展为 multi-head attention 是有益的 [gat_2018]。
+
+具体做法是：让 **K 个独立的 attention mechanism** 分别执行同样的聚合变换，再把各 head 的特征进行拼接；在最终预测层中，拼接不再合适，因此改用平均，并延迟最终非线性激活 [gat_2018]。这样得到的输出会包含 **K F′ 个特征**，而不是原来的 F′ 个特征 [gat_2018]。
+
+代价方面，使用 multi-head attention 会使存储和参数需求乘以 K；但各个 head 的计算是**完全独立且可并行化**的 [gat_2018]。因此，GAT 采用 multi-head attention 的核心原因是提升/稳定自注意力学习，同时其各 head 计算可并行 [gat_2018]。",
+CF15,fact,medium,structured_hybrid_rerank,6,0.16666666666666666,0.0,0.0,1.397503565003717,7.780242654000176,1.7392675060000329,9.177746219003893,1,1,,,"给定证据**没有明确说明 GAT 为什么采用 multi-head attention**。可确认的相关事实如下：
+
+- GAT",预测答案未说明GAT使用多头注意力的原因，反而称证据未明确说明，与参考答案关于稳定学习和提升表示能力的核心事实不符。
+CF16,fact,medium,structured_vector,6,0.047619047619047616,0.0,1.0,0.011945293001190294,4.3995722889994795,3.8950698710032157,4.41151758200067,1,2,,,"给定 Evidence 没有给出 GIN 更新公式中 epsilon 的定义或具体作用；只将 GIN-ϵ 作为与 GIN-0 并列的模型变体进行比较 [gin_2019]。证据表明 GIN-0 在测试性能上略但持续优于 GIN-ϵ，且两者对训练数据的拟合程度相当，因此 GIN-0 更好的泛化可能由它相较 GIN-ϵ 更简单来解释 [gin_2019]。
+
+因此，关于 epsilon 在 GIN 更新公式中的具体作用，依据给定证据无法回答，证据不足 [gin_2019]。",预测未说明 epsilon 在 GIN 更新公式中控制中心节点自身表示相对于邻居求和权重的具体作用，因此未命中核心事实。
+CF16,fact,medium,structured_vanilla_hybrid,6,0.046511627906976744,0.0,1.0,0.022259319997829152,3.736079742000584,1.960648071999458,3.758339061998413,1,1,,,证据不足：提供的证据没有给出 GIN 的更新公式，也没有定义或说明其中 \(\epsilon\) 的作用。只能看到论文评估了 `GIN-ϵ` 变体，例如在 COLLAB、IMDB-BINARY、IMDB-MULTI 上进行了评估 [gin_2019]，并且在表格中将 `SUM–MLP (GIN-0)` 与 `SUM–MLP (GIN-ϵ)` 的实验结果并列比较 [gin_2019]。但这些信息不足以解释 \(\epsilon\) 在 GIN 更新公式中的具体作用。因此，依据给定 Evidence 无法回答该问题。,预测未回答 epsilon 的作用，仅称证据不足，与参考答案中“控制中心节点自身表示权重以区分中心与邻域聚合贡献”的核心事实不符。
+CF16,fact,medium,structured_hybrid_rerank,6,,,0.0,1.5837939080010983,21.267932997998287,2.36300184042193e-06,22.851726905999385,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+CF19,fact,medium,structured_vector,6,0.16666666666666666,1.0,1.0,0.01174323700251989,4.40308527399975,2.7254852740006754,4.41482851100227,1,1,,,Cluster-GCN 在构造 mini-batch 前，首先对整张图执行**图聚类/节点分区**：将整图节点划分为多个簇（partition/cluster），形成若干子图，使得同簇内链接更密 [cluster_gcn_2019]。它使用高效图聚类算法（如 METIS）进行预处理，且聚类只需做一次，得到可复用的节点分区 [cluster_gcn_2019]。随后构造 batch 时，才从这些簇中选择节点或子图（可选择一个簇，或在 stochastic multi-clustering 中随机选择多个簇组合）来形成 mini-batch [cluster_gcn_2019]。,预测答案准确指出构造 mini-batch 前先对整图进行图聚类/节点分区，并说明以簇或簇组合诱导子图形成 mini-batch，与参考答案核心事实一致。
+CF19,fact,medium,structured_vanilla_hybrid,6,0.16326530612244897,1.0,1.0,0.022949336002056953,2.3265044660001877,1.967531403999601,2.3494538020022446,1,1,,,"Cluster-GCN 在构造 mini-batch 前，首先对整张图进行图聚类/节点划分：将图的节点划分为 \(c\) 个组（partition），即 \(V = [V_1,\dots,V_c]\)，并据此得到由各节点组内部边构成的 \(c\) 个子图 [cluster_gcn_2019]。随后才基于这些划分/子图设计 batch，使同一个 batch 内包含更多边，从而提高 embedding utilization [cluster_gcn_2019]。例如可使用 METIS 等图聚类算法 [cluster_gcn_2019]。",预测答案正确指出 Cluster-GCN 在构造 mini-batch 前先对整图进行图聚类/节点划分，并以簇诱导子图为基础，与参考答案核心事实一致。
+CF19,fact,medium,structured_hybrid_rerank,6,0.19512195121951217,1.0,1.0,1.985551130004751,2.9646734160014603,2.759602696998627,4.950224546006211,1,1,,,Cluster-GCN 在构造 mini-batch 前，首先对整张图做**图聚类**：将整张图的节点划分/分组成多个簇（partitions），每个簇对应一个子图/稠密子图 [cluster_gcn_2019]。实现上可采用 METIS 等图聚类算法 [cluster_gcn_2019]。该聚类只在预处理阶段执行一次，形成的节点分区可复用于后续训练 [cluster_gcn_2019]。之后 mini-batch 才从这些簇中采样节点块，并把邻域搜索限制在该子图内 [cluster_gcn_2019]。,预测答案明确指出构造 mini-batch 前首先对整图进行图聚类并划分为若干簇，与参考答案的核心事实一致且切题。
+CF20,fact,medium,structured_vector,6,,,0.0,0.011474300998088438,23.86116309099816,1.5140030882321298e-06,23.87263739199625,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+CF20,fact,medium,structured_vanilla_hybrid,6,,,0.0,0.021891569002036704,22.944035174998135,1.6229969332925975e-06,22.96592674400017,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+CF20,fact,medium,structured_hybrid_rerank,6,0.0,,1.0,1.4806542840015027,24.76630741400004,11.060156210998684,26.24696169800154,3,3,,attempt 1: JSONDecodeError('Unterminated string starting at: line 1 column 21 (char 20)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"APPNP 中该机制的核心是：把初始预测矩阵 \(H=f_\theta(X)\) 同时当作传播起点和每步 teleport/restart 的目标，使传播成为带重启的 topic-sensitive PageRank 近似。
+
+- 迭代形式为  
+  \(Z^{(0)}=H\)，  
+  \(Z^{(k+1)}=(1-\alpha)\hat{\tilde A}Z^{(k)}+\alpha H\)，  
+  其中 \(H\) 既作为 starting vector，也作为 teleport set [appnp_2019]。
+- 因此每步传播都以一定概率“回到”初始预测 \(H\)，相当于 random walk with restarts；每个列向量可视为一个 topic 的 teleport 分布 [appnp_2019]。
+- 该机制避免传播随着步数 \(K\) 增大而退化为全局 PageRank：当 \(\alpha=0\)（GCN-like propagation）时性能会随 \(K\) 增大而崩溃；使用 personalized propagation（如 \(\alpha=0.1\)）时准确率上升并趋于稳定，收敛到精确 PPNP [appnp_2019]。
+- teleport 概率 \(\alpha\) 可调节每个节点受影响邻域的大小，从而适配不同类型图；实验中最优通常约在 \(\alpha\in[0.05,0.2]\)，且较高的 \(\alpha\) 改善收敛速度 [appnp_2019]。
+- 该方案不需要为传播额外训练参数，可传播很远但参数很少，并且保持图稀疏性，不构造 \(R^{n\times n}\) 矩阵 [appnp_2019]。
+- 反向传播时梯度会流经该传播机制，隐式考虑无限多邻域聚合层，从而显著提升模型准确率 [appnp_2019]。",
+CR13,relation,medium,structured_vector,6,0.0,,1.0,0.011806025999248959,8.965665689000161,9.448957615000836,8.97747171499941,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"- **概率编码器（推断模型）**：VGAE 用两层 GCN 参数化变分后验 \(q(Z|X,A)=\prod_i q(z_i|X,A)\)，其中 \(q(z_i|X,A)=\mathcal N(z_i|\mu_i,\mathrm{diag}(\sigma_i^2))\)；\(\mu=\mathrm{GCN}_\mu(X,A)\)，\(\log\sigma=\mathrm{GCN}_\sigma(X,A)\)，且两个 GCN 共享第一层参数 \(W_0\)。因此它承担的是：根据节点特征 \(X\) 和图结构 \(A\) 推断每个节点潜在变量的高斯分布参数，学习可解释的潜在表示，并能自然纳入节点特征 [vgae_2016]。
+
+- **内积解码器**：VGAE 使用一个简单的内积解码器 [vgae_2016]。它承担的是：基于潜在嵌入计算重构邻接矩阵元素的分数；实验中 Eq. 4 左侧被用来计算重构邻接矩阵元素的分数，并据此进行边/非",
+CR13,relation,medium,structured_vanilla_hybrid,6,0.0,1.0,1.0,0.02169850599966594,15.573436198999843,2.2540045819987427,15.59513470499951,2,1,,,"VGAE 的概率编码器（推断模型）将节点特征 \(X\) 和图结构 \(A\) 编码为潜变量的高斯分布：  
+\[
+q(z_i\mid X,A)=\mathcal N(z_i\mid \mu_i,\operatorname{diag}(\sigma_i^2))
+\]
+其中 \(\mu=\mathrm{GCN}_\mu(X,A)\)，\(\log\sigma=\mathrm{GCN}_\sigma(X,A)\)，且两个 GCN 共享第一层参数；它承担推断/采样潜表示 \(Z\) 的角色。[vgae_2016]
+
+内积解码器承担从潜表示 \(Z\) 重构或评分图结构的角色：VGAE 使用简单的内积解码器，并用其计算重建邻接矩阵元素的分数，以用于链接预测中区分边与非边。[vgae_2016] 证据还指出，内积解码器会试图把嵌入推离零中心，因此可能与高斯先验不完全匹配。[vgae_2016]",预测准确说明了概率编码器从图结构和节点特征推断潜变量高斯分布并采样，内积解码器用潜变量内积给出节点间边概率或重构邻接矩阵，与参考答案核心事实一致且切题。
+CR13,relation,medium,structured_hybrid_rerank,6,0.0,0.0,1.0,1.5441784100003133,5.624117837000085,1.3324766740006453,7.168296247000399,1,1,,,"根据给定证据，无法确定 VGAE 的概率编码器与内积解码器的具体角色。
+
+可确认的仅有：
+- VGAE 使用 GCN [vgae_2016]。
+- VGAE 使用内积解码器 [vgae_2016]。
+
+但证据未说明概率编码器承担什么职责，也未说明内积解码器承担什么职责。因此，对“分别承担什么角色”这一问题，证据不足。",预测答案未说明概率编码器生成潜变量分布参数及内积解码器输出边概率，反而称证据不足，与参考答案核心事实不符且未切题。
+CR18,relation,medium,structured_vector,6,0.05555555555555555,1.0,1.0,0.011620946002949495,5.396436267001263,1.5041014260023076,5.408057213004213,1,1,,,"DiffPool 中，第 \(l\) 层的 assignment matrix \(S^{(l)} \in \mathbb{R}^{n_l \times n_{l+1}}\)：每一行对应第 \(l\) 层的 \(n_l\) 个节点/簇，每一列对应下一层 \(n_{l+1}\) 个簇，表示第 \(l\) 层每个节点到下一层簇的软分配 [diffpool_2018]。
+
+粗化后的邻接矩阵 \(A^{(l+1)}\) 正是由该 assignment matrix 对输入邻接矩阵 \(A^{(l)}\) 聚合得到：
+
+\[
+A^{(l+1)} = S^{(l)T} A^{(l)} S^{(l)} \in \mathbb{R}^{n_{l+1} \times n_{l+1}}
+\]
+
+[diffpool_2018]。
+
+因此，\(A^{(l+1)}\) 的每个元素 \(A^{(l+1)}_{ij}\) 可看作粗化图中簇 \(i\) 与簇 \(j\) 之间的连接强度；\(A^{(l+1)}\) 是实值矩阵，表示一个全连接的边加权图 [diffpool_2018]。
+
+另外，\(S^{(l)}\) 本身由 pooling GNN 基于 \(A^{(l)}\) 和 \(X^{(l)}\) 生成，并按行做 softmax：
+
+\[
+S^{(l)} = \mathrm{softmax}\left(\mathrm{GNN}_{l,\mathrm{pool}}(A^{(l)}, X^{(l)})\right)
+\]
+
+[diffpool_2018]。
+
+所以二者关系是：assignment matrix 提供节点到簇的软分配，粗化后的邻接矩阵则通过 \(S^{(l)T} A^{(l)} S^{(l)}\) 把原邻接矩阵投影/聚合为簇级邻接矩阵 [diffpool_2018]。",预测答案准确指出 assignment matrix 是节点到簇的软分配，并通过 S^T A S 变换得到粗化后的邻接矩阵，核心事实与参考答案一致且切题。
+CR18,relation,medium,structured_vanilla_hybrid,6,0.09302325581395349,1.0,1.0,0.022312399003567407,7.709379517000343,8.123120595999353,7.731691916003911,1,2,,,"DiffPool 中，粗化后的邻接矩阵由 assignment matrix 通过双线性变换得到：
+
+\[
+A^{(l+1)} = S^{(l)T} A^{(l)} S^{(l)}
+\]
+
+其中 \(S^{(l)} \in \mathbb{R}^{n_l \times n_{l+1}}\) 是第 \(l\) 层的 assignment matrix，每行对应第 \(l\) 层的一个节点/簇，每列对应下一层的簇，表示节点到下一层簇的软分配 [diffpool_2018]。因此，\(A^{(l+1)}\) 是用 assignment matrix 对原邻接矩阵 \(A^{(l)}\) 进行聚合后得到的粗化邻接矩阵，尺寸为 \(n_{l+1} \times n_{l+1}\) [diffpool_2018]。
+
+具体来说，\(A^{(l+1)}_{ij}\) 可视为粗化图中簇 \(i\) 与簇 \(j\) 之间的连接强度；\(A^{(l+1)}\) 是实数矩阵，表示一个全连接的边加权图 [diffpool_2018]。",预测答案准确给出了 assignment matrix 与粗化邻接矩阵之间通过 S^T A S 双线性变换得到的关系，与参考答案的核心事实一致且切题。
+CR18,relation,medium,structured_hybrid_rerank,6,0.0963855421686747,1.0,1.0,1.5864050250020227,4.494028842000262,1.7374066379998112,6.080433867002284,1,1,,,"DiffPool 中，assignment matrix \(S^{(l)}\) 是用于把第 \(l\) 层节点软分配到第 \(l+1\) 层簇的矩阵：其行对应第 \(l\) 层节点/簇，列对应下一层的簇 [diffpool_2018]。粗化后的邻接矩阵 \(A^{(l+1)}\) 则由 \(S^{(l)}\) 对输入邻接矩阵 \(A^{(l)}\) 做双线性变换得到：
+
+\[
+A^{(l+1)}=S^{(l)T} A^{(l)} S^{(l)}
+\]
+
+该式给出粗化邻接矩阵，其维度为 \(n_{l+1}\times n_{l+1}\) [diffpool_2018]。因此，\(A^{(l+1)}\) 表示簇与簇之间的连接强度；每个元素 \(A^{(l+1)}_{ij}\) 可看作簇 \(i\) 与簇 \(j\) 之间的连接强度 [diffpool_2018]。粗化后的 \(A^{(l+1)}\) 是实数矩阵，表示一个完全连接的边加权图 [diffpool_2018]。",预测答案准确说明了 assignment matrix 是节点到下一层簇的软分配，并用 S^T A S 得到粗化邻接矩阵，与参考答案核心事实一致且切题。
+CR19,relation,medium,structured_vector,6,0.03076923076923077,1.0,1.0,0.011607484000705881,15.60948624500088,2.209483097001794,15.621093729001586,2,1,,,"APPNP/PPNP 将预测网络与传播网络解耦，核心原因如下：
+
+- 传统消息传递/GCN 类方法对节点分类时只考虑几步传播内的邻居，所利用邻域大小难以扩展 [appnp_2019]。解耦后，预测由神经网络 \(f_\theta\) 对每个节点特征独立生成预测 \(H\)，传播则由个性化 PageRank 等传播方案完成，从而避免把“邻域聚合层数”绑死在神经网络深度上 [appnp_2019]。
+- 该分离使神经网络深度与传播算法完全独立；个性化 PageRank 可有效利用甚至无限多层的邻域聚合，而经典消息传递框架无法做到这一点 [appnp_2019]。
+- 因此，解耦解决了消息传递模型中固有的“有限范围问题”，且不引入额外参数，并能利用由传送概率 \(\alpha\) 调节的大范围邻域进行分类 [appnp_2019]。
+- 解耦还带来灵活性：预测部分可使用任意生成预测的方法，例如用于图像图的深度卷积神经网络；预测网络逐节点独立运行，也便于并行化 [appnp_2019]。同时，模型可容易地与任意神经网络结合 [appnp_2019]。
+- 需要注意，解耦是结构上的分离，但模型仍端到端训练：反向传播时梯度会流经传播方案，从而隐式考虑无限多层邻域聚合 [appnp_2019]。",预测答案准确说明了解耦可先由神经网络生成初始预测，再用PPR等传播扩大邻域范围，避免堆叠同样多的参数化GCN层，核心事实与参考答案一致且切题。
+CR19,relation,medium,structured_vanilla_hybrid,6,0.0,,0.75,0.02142843700494268,15.060771593001846,7.823206766999647,15.082200030006788,2,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),APPNP/PPNP 将预测与传播解耦，主要是为了突破许多消息传递模型固有的 **limited range problem**：这些模型分类一个节点时只利用几步传播范围内的节点，且可用的邻域大小难以扩大 [appnp_2019]。解耦后，模型可以使用基于 personalized PageRank 的传播过程，为每个节点利用一个大且可调的邻域（通过 teleport probability α 调节）进行分类，同时不引入额外参数 [appnp_2019]。此外，这种解耦设计使模型容易与任意神经网络结合，并保持较高的计算效率 [appnp_2019]。在训练和推理中，传播过程会分别影响预测网络的训练以及推理时的分类决策，但预测与传播被分开处理 [appnnp_2019]。,
+CR19,relation,medium,structured_hybrid_rerank,6,0.038461538461538464,1.0,1.0,1.3932897640042938,26.773445556002116,4.093486118999863,28.16673532000641,3,2,,,"核心原因是：经典 GCN/消息传递式模型对节点分类时只利用几步传播内的邻居，且可利用邻域大小很难扩展 [appnp_2019]。PPNP/APPNP 将“由节点自身特征生成预测”的神经网络 \(f_\theta\) 与“在图上传播预测”的个性化 PageRank 方案分离：先 \(H_{i,:}=f_\theta(X_{i,:})\)，再用个性化 PageRank 传播得到最终预测 [appnp_2019]。
+
+解耦带来的关键好处是：
+
+- 神经网络深度与传播算法/传播步数解耦；个性化 PageRank 可有效使用甚至无限多跳的邻域聚合层，而经典消息传递框架做不到这一点 [appnp_2019]。
+- 解耦解决了消息传递模型的有限邻域范围问题，使模型能利用大且可调的邻域，邻域范围可由 teleport probability",预测答案准确说明了APPNP将特征预测网络与PPR风格传播解耦，从而扩大传播深度/邻域范围而无需堆叠同等数量的参数化GCN层，核心事实与参考答案一致。
+CC15,comparison,hard,structured_vector,6,0.05405405405405406,,1.0,0.012481679001211887,18.018721005999396,7.931254216000525,18.031202685000608,2,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"- **GAT 更强调“注意力加权聚合”**：对同一邻域内的不同邻居赋予不同权重，而不是常数权重；证据表明，给同一邻域节点分配不同权重有益，并且 GAT 相对于常数注意力 Const-GAT 的提升直接说明“给不同邻居分配不同权重”的重要性；同时 GAT 关注聚合成整个邻域的信息 [gat_2018]。  
+- **GIN 更强调“sum 聚合”/保留完整多重集的能力**：GIN 使用 Sum–MLP 聚合；证据指出 sum 能捕获完整多重集，mean 只捕获元素类型的比例/分布，max 忽略多重性；GIN 与 sum-aggregation GNN 能准确捕获图结构并显著优于其他模型，而 mean-aggregation GNN 甚至无法捕获无标签图的结构 [gin_2019]。GIN 也被描述为简单且最大表达力的 GNN 示例之一 [gin_2019]。  
+
+因此：**GAT 强调基于注意力的差异化邻居加权聚合 [gat_2018]；GIN 强调基于 sum 的完整多重集聚合以提升表达力 [gin_2019]。**",
+CC15,comparison,hard,structured_vanilla_hybrid,6,0.061538461538461535,0.4,1.0,0.030219659001886612,5.890161138999247,9.119144628999493,5.920380798001133,1,3,,,"- GIN 更强调 **sum（求和）聚合**：证据指出 sum 聚合能捕获完整 multiset，mean 只捕获元素类型的比例/分布，max 会忽略多重性；GIN 使用 Sum–MLP，并在实验中优于或 comparable 于较弱的 GNN 变体，且 sum-based GNN 比 mean-based GNN 更能捕获图结构 [gin_2019]。  
+- GAT 更强调哪种聚合能力：**证据不足**。给定证据只表明 GAT 被提出、Const-GAT 可简化 GAT，以及 GAT 在 Citeseer 上被评估等信息，未描述 GAT 的聚合机制或其强调的聚合能力 [gat_2018]。因此无法依据现有 Evidence 判断 GAT 更强调哪种聚合能力。",预测正确指出 GIN 强调可捕获多重集的 sum 聚合，但未回答 GAT 强调可学习注意力区分邻居重要性，反而称证据不足，核心事实缺失一半。
+CC15,comparison,hard,structured_hybrid_rerank,6,0.10256410256410256,,1.0,1.8168485530004546,3.9127246529969852,9.491289423000126,5.72957320599744,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"GAT 更强调**注意力加权聚合**：对同一邻域内的不同邻居分配不同权重，而不是像常量注意力/GCN 式聚合那样使用相同权重 [gat_2018]。  
+GIN 更强调**求和（sum）聚合**：GIN 使用 Sum–MLP，求和聚合 GNN 能准确捕捉图结构；若把 sum 替换为 mean 或 max-pooling，则属于更弱的 GNN 变体 [gin_2019]。",
+CM14,multi_hop,hard,structured_vector,6,0.08333333333333333,,1.0,0.011934377002035035,16.341218346999085,6.278436952001357,16.35315272400112,2,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Unterminated string starting at: line 1 column 23 (char 22)'),"最符合描述的核心模型是 **GraphSAGE** [graphsage_2017]。
+
+依据给定证据：GraphSAGE 的方法部分讨论了邻居采样器（non-uniform samplers），并定义了可训练、对称的 **pooling aggregator**：对邻居向量先过全连接网络，再做 element-wise max-pooling 来聚合",
+CM14,multi_hop,hard,structured_vanilla_hybrid,6,0.05,,1.0,0.022327982002025237,7.513581512997916,5.514408871000342,7.535909494999942,1,3,,attempt 1: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 2: JSONDecodeError('Expecting value: line 1 column 1 (char 0)') | attempt 3: JSONDecodeError('Expecting value: line 1 column 1 (char 0)'),"严格依据给定证据，无法确认有哪个核心模型同时满足这两个条件。
+
+- 证据中与“邻居采样”和“可训练聚合器”最相关的是 GraphSAGE：其方法部分提到探索非均匀采样器是未来工作，并给出了可训练的 pooling aggregator [graphsage_2017]。
+- 但同一证据没有明确说明 GraphSAGE “将学到的聚合器用于训练时未见节点” [graphsage_2017]。
+- GAT 的证据只说明其在 inductive protein-protein interaction dataset 上验证，并强调 attention-based models 处理任意结构图的能力 [gat_2018]；没有说明它通过邻居采样控制计算量。
+
+因此，若要求两个",
+CM14,multi_hop,hard,structured_hybrid_rerank,6,,,0.0,1.385171559999435,23.319614856001863,2.2740023268852383e-06,24.704786416001298,3,0,attempt 1: ValueError('empty LLM response') | attempt 2: ValueError('empty LLM response') | attempt 3: ValueError('empty LLM response'),generation failed; judge not called,,
+CM17,multi_hop,hard,structured_vector,6,0.06451612903225806,1.0,1.0,0.013947624996944796,2.5845869119984854,3.7601320760004455,2.5985345369954302,1,2,,,"符合该描述的是 **DIFFPOOL** [diffpool_2018]。
+
+关键依据：DIFFPOOL 在深度 GNN 的每一层学习可微的软分配，将节点基于其学到的嵌入映射到一组簇 [diffpool_2018]；其嵌入矩阵和分配矩阵分别由两个独立的 GraphSAGE 模型计算 [diffpool_2018]；每一层 DIFFPOOL 会进一步粗化输入图，并可分层堆叠以生成任意输入图的层次化表示 [diffpool_2018]。",预测准确识别为 DIFFPOOL，并正确说明了其学习节点嵌入、软分配矩阵及逐层粗化生成层次化图的核心机制。
+CM17,multi_hop,hard,structured_vanilla_hybrid,6,0.04651162790697674,1.0,1.0,0.024521955994714517,4.700178649000009,3.85356599899751,4.724700604994723,1,2,,,"是 **DIFFPOOL** [diffpool_2018]。
+
+- 它在深层 GNN 的每一层学习可微的软分配，依据学习到的节点嵌入将节点映射到一组簇 [diffpool_2018]。
+- 节点嵌入矩阵与簇分配矩阵由两个独立的 GRAPH SAGE 模型分别计算 [diffpool_2018]。
+- 通过分层堆叠 GNN 层，第 \(l\) 层的输入节点对应第 \(l-1\) 层学到的簇，因此每层不断粗化输入图，递归生成更粗的图与层次表示 [diffpool_2018]。
+- 实验中也展示了 DIFFPOOL 的层次簇分配，第二层节点对应第一层簇 [diffpool_2018]。",预测正确识别为 DiffPool，并准确说明其先学习节点嵌入、再通过独立模型学习软簇分配并递归粗化图的核心机制。
+CM17,multi_hop,hard,structured_hybrid_rerank,6,0.07692307692307691,1.0,1.0,0.7238483579967578,2.4971613279994926,1.4281837639973674,3.2210096859962505,1,1,,,"是 **DIFFPOOL**（论文 `diffpool_2018`）。
+
+依据：DIFFPOOL 在每一层学习可微的软分配，将节点基于其学习到的嵌入映射到一组簇；每层使输入图越来越粗化，从而构建层次化表示 [diffpool_2018]。其嵌入矩阵和分配矩阵由两个独立的 GraphSAGE 模型分别计算 [diffpool_2018]。",预测正确指出 DIFFPOOL，并准确说明其学习节点嵌入与软分配矩阵以递归粗化图的核心机制。
+CM20,multi_hop,hard,structured_vector,6,0.11764705882352941,1.0,1.0,0.013420752002275549,3.7456829090006067,1.3720913469987863,3.7591036610028823,1,1,,,"该方法是 **Cluster-GCN** [cluster_gcn_2019]。
+
+它利用图聚类结构：每一步采样一个由图聚类算法识别出的稠密子图对应的节点块，并把邻域搜索限制在该子图内 [cluster_gcn_2019]。具体使用 METIS 等图聚类算法划分图，将同一簇内的节点组成 batch [cluster_gcn_2019]。这样每个 batch 只需存当前 batch 内的节点嵌入，内存为 \(O(bFL)\)，并能避免大量跨簇邻域扩张和昂贵的邻域搜索 [cluster_gcn_2019]。其实现是在每个 step 采样一个簇 \(V_t\)，仅基于当前 batch 的子图、特征、标签和模型参数做 SGD 更新 [cluster_gcn_2019]。",预测答案正确指出 Cluster-GCN，并准确说明其先进行图聚类、将簇诱导子图作为 mini-batch 以减少邻域扩张和内存压力。
+CM20,multi_hop,hard,structured_vanilla_hybrid,6,0.24,1.0,1.0,0.024673842002812307,5.215567407998606,2.7180646090018854,5.240241250001418,1,1,,,是 **Cluster-GCN**。它先利用图聚类算法划分节点，然后在每一步采样一个由聚类识别出的稠密子图对应的节点块，并将邻域搜索限制在该子图内，从而减少邻域扩张并降低内存与计算开销 [cluster_gcn_2019]。其批次设计基于图聚类算法（如 METIS），只存储当前批次内的节点嵌入，因此内存需求为 \(O(bFL)\)，显著优于需要保存所有节点中间嵌入的方法 [cluster_gcn_2019]。,预测正确指出 Cluster-GCN，并准确说明其先图聚类、以簇诱导子图作为 mini-batch 来减少邻域扩张和内存压力。
+CM20,multi_hop,hard,structured_hybrid_rerank,6,0.14285714285714285,1.0,1.0,1.4008035110018682,4.400687490000564,2.7009393730004376,5.801491001002432,1,1,,,"是 **Cluster-GCN** [cluster_gcn_2019]。
+
+它先利用图聚类算法（如 METIS）对图做划分，使同一 partition 内链接更多，再把簇/partition 诱导子图作为一个 mini-batch 进行 SGD 更新 [cluster_gcn_2019]。因此每个 batch 中的节点只需在簇内做邻域搜索，不需要向簇外扩张；内存只需存储当前 batch 的节点嵌入，空间复杂度为 \(O(bLF)\)，从而减少邻域扩张和内存压力 [cluster_gcn_2019]。",预测正确指出 Cluster-GCN，并准确描述其先图聚类、再将簇诱导子图作为 mini-batch 以减少邻域扩张和内存压力的核心事实。

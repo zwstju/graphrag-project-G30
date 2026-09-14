@@ -1,0 +1,22 @@
+{
+  "benchmark": "benchmark/gnn_qa_core69_audit_filtered.jsonl",
+  "benchmark_sha256": "804da496df045bb1c7e792701eb56586c1914b7c9c6bbefab3e4606626e6b26c",
+  "question_count": 69,
+  "methods": [
+    "fixed_vector",
+    "structured_vector",
+    "structured_vanilla_hybrid",
+    "structured_hybrid_rerank"
+  ],
+  "vector_candidates": 12,
+  "graph_candidates": 12,
+  "final_evidence_k": 6,
+  "embedding_model": "BAAI/bge-m3",
+  "embedding_device": "cuda",
+  "structured_index_manifest": "data/stage2/vector_manifest.json",
+  "fixed_index_manifest": "data/stage2/fixed_vector_1200_200_manifest.json",
+  "started_at_utc": "2026-09-14T13:30:26.740695+00:00",
+  "completed_at_utc": "2026-09-14T13:32:13.466989+00:00",
+  "runtime_seconds": 106.726294,
+  "candidate_pool_invariant": "Structured Vanilla Hybrid and Structured Hybrid + Rerank share each query's exact Vector and Graph candidate IDs."
+}

@@ -1,0 +1,159 @@
+import json
+import re
+from pathlib import Path
+from typing import Dict, Iterable, List, Tuple, Optional
+
+SECTION_ALIASES = {
+    "abstract": "Abstract",
+    "introduction": "Introduction",
+    "related work": "Related Work",
+    "background": "Background",
+    "preliminaries": "Preliminaries",
+    "method": "Method",
+    "methods": "Method",
+    "methodology": "Method",
+    "model": "Method",
+    "approach": "Method",
+    "experiments": "Experiments",
+    "experimental results": "Experiments",
+    "evaluation": "Experiments",
+    "results": "Results",
+    "discussion": "Discussion",
+    "conclusion": "Conclusion",
+    "conclusions": "Conclusion",
+    "appendix": "Appendix",
+}
+
+HEADING_RE = re.compile(
+    r"^\s*(?:\d+(?:\.\d+)*\s+)?([A-Za-z][A-Za-z\s\-&]{2,60})\s*$"
+)
+
+
+def normalize_ws(text: str) -> str:
+    return re.sub(r"[ \t]+", " ", text.replace("\r", "")).strip()
+
+
+def canonical_section(raw: str) -> str:
+    key = re.sub(r"\s+", " ", raw.strip().lower())
+    for alias, canonical in SECTION_ALIASES.items():
+        if key == alias or key.startswith(alias + " "):
+            return canonical
+    return raw.strip().title()[:80]
+
+
+def detect_heading(line: str) -> Optional[str]:
+    s = line.strip()
+    if not s or len(s) > 90:
+        return None
+    m = HEADING_RE.match(s)
+    if not m:
+        return None
+    raw = m.group(1).strip()
+    key = re.sub(r"\s+", " ", raw.lower())
+    known = any(key == a or key.startswith(a + " ") for a in SECTION_ALIASES)
+    looks_numbered = bool(re.match(r"^\s*\d+(?:\.\d+)*\s+", s))
+    mostly_caps = raw.upper() == raw and len(raw.split()) <= 8
+    if known or looks_numbered or mostly_caps:
+        return canonical_section(raw)
+    return None
+
+
+def split_sections(text: str) -> List[Tuple[str, str]]:
+    lines = text.splitlines()
+    sections: List[Tuple[str, List[str]]] = [("Unknown", [])]
+    for line in lines:
+        heading = detect_heading(line)
+        if heading:
+            if sections[-1][1]:
+                sections.append((heading, []))
+            else:
+                sections[-1] = (heading, [])
+        else:
+            sections[-1][1].append(line)
+    out = []
+    for name, body_lines in sections:
+        body = "\n".join(body_lines).strip()
+        if body:
+            out.append((name, body))
+    return out or [("Unknown", text)]
+
+
+def sentence_split(text: str) -> List[str]:
+    text = normalize_ws(text)
+    if not text:
+        return []
+    # Scientific text: keep decimal numbers reasonably intact; split on punctuation + whitespace.
+    parts = re.split(r"(?<=[.!?。！？])\s+", text)
+    return [p.strip() for p in parts if p.strip()]
+
+
+def chunk_section(section_text: str, max_chars: int = 1800, overlap_chars: int = 180) -> List[str]:
+    paras = [normalize_ws(p) for p in re.split(r"\n\s*\n+", section_text) if normalize_ws(p)]
+    if not paras:
+        paras = sentence_split(section_text)
+
+    chunks: List[str] = []
+    buf = ""
+    for para in paras:
+        if len(para) <= max_chars and len(buf) + len(para) + 2 <= max_chars:
+            buf = (buf + "\n\n" + para).strip()
+            continue
+
+        if buf:
+            chunks.append(buf)
+            tail = buf[-overlap_chars:] if overlap_chars > 0 else ""
+            buf = tail
+
+        if len(para) <= max_chars:
+            buf = (buf + "\n\n" + para).strip()
+            continue
+
+        # Oversized paragraph: split by sentences while preserving local overlap.
+        sent_buf = buf
+        for sent in sentence_split(para):
+            if len(sent_buf) + len(sent) + 1 <= max_chars:
+                sent_buf = (sent_buf + " " + sent).strip()
+            else:
+                if sent_buf:
+                    chunks.append(sent_buf)
+                sent_buf = (sent_buf[-overlap_chars:] + " " + sent).strip() if overlap_chars else sent
+        buf = sent_buf
+
+    if buf:
+        chunks.append(buf)
+    return [c for c in chunks if len(c) >= 80]
+
+
+def chunk_paper(paper: Dict, max_chars: int = 1800, overlap_chars: int = 180) -> List[Dict]:
+    pid = paper.get("paper_id") or paper.get("id") or "unknown"
+    title = paper.get("title", "")
+    year = paper.get("year", "")
+    text = paper.get("text", "")
+    out: List[Dict] = []
+    idx = 0
+    for section, body in split_sections(text):
+        for chunk in chunk_section(body, max_chars=max_chars, overlap_chars=overlap_chars):
+            out.append({
+                "paper_id": pid,
+                "title": title,
+                "year": year,
+                "section": section,
+                "chunk_id": f"{pid}_s{idx:04d}",
+                "text": chunk,
+            })
+            idx += 1
+    return out
+
+
+def build_chunks(papers_path: str, output_path: str, max_chars: int = 1800, overlap_chars: int = 180) -> int:
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    count = 0
+    with open(papers_path, "r", encoding="utf-8") as fin, open(output_path, "w", encoding="utf-8") as fout:
+        for line in fin:
+            if not line.strip():
+                continue
+            paper = json.loads(line)
+            for c in chunk_paper(paper, max_chars=max_chars, overlap_chars=overlap_chars):
+                fout.write(json.dumps(c, ensure_ascii=False) + "\n")
+                count += 1
+    return count

@@ -1,0 +1,50 @@
+Semi-Supervised Classification with Graph Convolutional Networks
+Variational Graph Auto-Encoders
+Inductive Representation Learning on Large Graphs
+Graph Attention Networks
+How Powerful are Graph Neural Networks?
+DeepWalk: Online Learning of Social Representations
+node2vec: Scalable Feature Learning for Networks
+Neural Message Passing for Quantum Chemistry
+Hierarchical Graph Representation Learning with Differentiable Pooling
+Simplifying Graph Convolutional Networks
+Predict then Propagate: Graph Neural Networks meet Personalized PageRank
+Cluster-GCN: An Efficient Algorithm for Training Deep and Large Graph Convolutional Networks
+Convolutional Neural Networks on Graphs with Fast Localized Spectral Filtering
+FastGCN: Fast Learning with Graph Convolutional Networks via Importance Sampling
+GraphSAINT: Graph Sampling Based Inductive Learning Method
+Representation Learning on Graphs with Jumping Knowledge Networks
+Simple and Deep Graph Convolutional Networks
+DropEdge: Towards Deep Graph Convolutional Networks on Node Classification
+MixHop: Higher-Order Graph Convolutional Architectures via Sparsified Neighborhood Mixing
+Beyond Homophily in Graph Neural Networks: Current Limitations and Effective Designs
+Deep Graph Infomax
+Graph Contrastive Learning with Augmentations
+Relational Inductive Biases, Deep Learning, and Graph Networks
+Modeling Relational Data with Graph Convolutional Networks
+LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation
+Masked Label Prediction: Unified Message Passing Model for Semi-Supervised Classification
+Do Transformers Really Perform Bad for Graph Representation?
+Recipe for a General, Powerful, Scalable Graph Transformer
+GraphMAE: Self-Supervised Masked Graph Autoencoders
+GraphMAE2: A Decoding-Enhanced Masked Self-Supervised Graph Learner
+Principal Neighbourhood Aggregation for Graph Nets
+Gated Graph Sequence Neural Networks
+Geometric Deep Learning on Graphs and Manifolds using Mixture Model CNNs
+Graph U-Nets
+Self-Attention Graph Pooling
+ASAP: Adaptive Structure Aware Pooling for Learning Hierarchical Graph Representations
+Position-aware Graph Neural Networks
+SIGN: Scalable Inception Graph Neural Networks
+GRAND: Graph Random Neural Networks for Semi-Supervised Learning
+Combining Label Propagation and Simple Models Out-performs Graph Neural Networks
+Beyond Low-frequency Information in Graph Convolutional Networks
+Large Scale Learning on Non-Homophilous Graphs: New Benchmarks and Strong Simple Methods
+BernNet: Learning Arbitrary Graph Spectral Filters via Bernstein Approximation
+DeeperGCN: All You Need to Train Deeper GCNs
+Open Graph Benchmark: Datasets for Machine Learning on Graphs
+Adaptive Universal Generalized PageRank Graph Neural Network
+Geom-GCN: Geometric Graph Convolutional Networks
+Graph Transformer Networks
+Graph-Bert: Only Attention is Needed for Learning Graph Representations
+Rethinking Graph Transformers with Spectral Attention
