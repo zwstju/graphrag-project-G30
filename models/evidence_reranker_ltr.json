@@ -1,0 +1,134 @@
+{
+  "model_type": "pairwise_projected_logistic_ltr",
+  "label_type": "weak_supervision_gold_paper_provenance",
+  "feature_names": [
+    "semantic",
+    "entity",
+    "relation",
+    "section",
+    "source"
+  ],
+  "weights": [
+    0.17126518487930298,
+    0.3151645362377167,
+    0.2283153384923935,
+    0.16297779977321625,
+    0.1222771555185318
+  ],
+  "training": {
+    "benchmark": "benchmark/gnn_qa_core69_audit_filtered.jsonl",
+    "audit": null,
+    "heldout_generation_results": "results/final/generation_outputs.jsonl",
+    "heldout_qids": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C09",
+      "C11",
+      "CC15",
+      "CF15",
+      "CF16",
+      "CF19",
+      "CF20",
+      "CM14",
+      "CM17",
+      "CM20",
+      "CR13",
+      "CR18",
+      "CR19",
+      "F06",
+      "F07",
+      "F08",
+      "F09",
+      "M02",
+      "M04",
+      "M07",
+      "M08",
+      "M10",
+      "R03",
+      "R05",
+      "R07",
+      "R09",
+      "R11"
+    ],
+    "train_query_count": 30,
+    "validation_query_count": 7,
+    "candidate_k": 12,
+    "max_pairs_per_query": 40,
+    "seed": 42,
+    "train_pair_stats": {
+      "queries_seen": 30,
+      "queries_with_pairs": 27,
+      "positive_evidence": 375,
+      "negative_evidence": 289,
+      "pairs": 1013
+    },
+    "validation_pair_stats": {
+      "queries_seen": 7,
+      "queries_with_pairs": 5,
+      "positive_evidence": 87,
+      "negative_evidence": 69,
+      "pairs": 200
+    }
+  },
+  "metrics": {
+    "best_epoch": 26,
+    "best_val_pair_accuracy": 0.875,
+    "final_train_pair_accuracy": 0.6999012833168805,
+    "history_tail": [
+      [
+        97,
+        0.7097729516288253,
+        0.855
+      ],
+      [
+        98,
+        0.7097729516288253,
+        0.855
+      ],
+      [
+        99,
+        0.7097729516288253,
+        0.86
+      ],
+      [
+        100,
+        0.7097729516288253,
+        0.86
+      ],
+      [
+        101,
+        0.7087857847976308,
+        0.86
+      ],
+      [
+        102,
+        0.7087857847976308,
+        0.86
+      ],
+      [
+        103,
+        0.7068114511352419,
+        0.86
+      ],
+      [
+        104,
+        0.7068114511352419,
+        0.86
+      ],
+      [
+        105,
+        0.7058242843040474,
+        0.86
+      ],
+      [
+        106,
+        0.7058242843040474,
+        0.86
+      ]
+    ]
+  },
+  "note": "Weights are learned from weak paper-level provenance supervision. Core32 generation qids are excluded from training."
+}
