@@ -4,6 +4,7 @@ from .utils import normalize_key, parse_json_array
 
 
 def find_entities_lexical(query: str, graph_nodes: list[str]) -> list[str]:
+    """通过规范化字面匹配从已有图节点中查找查询实体。"""
     q = normalize_key(query)
 
     candidates = []
@@ -83,6 +84,7 @@ Existing graph nodes:
 
 
 def find_seed_entities(query: str, graph_nodes: list[str]) -> list[str]:
+    """优先使用字面匹配，并在无结果时调用 LLM 选择种子实体。"""
     lexical = find_entities_lexical(query, graph_nodes)
     if lexical:
         return lexical[:5]

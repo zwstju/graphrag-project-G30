@@ -2,6 +2,7 @@ import json,re
 from stage2.llm.client import LLMClient
 
 def llm_correctness(question, gold_answer, pred_answer, client=None):
+    """使用统一 LLM judge 评估预测答案的事实正确性与切题程度。"""
     client=client or LLMClient()
     prompt=f'''你是严格的科研问答评测器。比较预测答案和参考答案，评估核心事实是否正确且回答是否切题，不因措辞不同扣分。
 返回 JSON：{{"score":0到1之间的小数,"reason":"一句话"}}

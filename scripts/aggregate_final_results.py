@@ -18,23 +18,27 @@ DISPLAY = {
 
 
 def read_csv(path: Path) -> list[dict]:
+    """读取带 BOM 兼容的 CSV 并返回字典记录。"""
     with path.open(encoding="utf-8-sig") as handle:
         return list(csv.DictReader(handle))
 
 
 def number(value):
+    """把非空字段转换为浮点数，同时保留缺失值语义。"""
     if value in (None, ""):
         return None
     return float(value)
 
 
 def mean_present(rows, field):
+    """仅对指定字段的非缺失数值计算平均值。"""
     values = [number(row.get(field)) for row in rows]
     values = [value for value in values if value is not None]
     return sum(values) / len(values) if values else ""
 
 
 def write_csv(path: Path, rows: list[dict]):
+    """按首条记录的字段顺序写出 UTF-8 CSV。"""
     fields = list(rows[0]) if rows else []
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
@@ -42,6 +46,7 @@ def write_csv(path: Path, rows: list[dict]):
 
 
 def generation_aggregate(rows, by_qtype):
+    """按方法及可选题型汇总生成成功率、评分和延迟。"""
     groups = defaultdict(list)
     for row in rows:
         groups[(row["method"], row["qtype"] if by_qtype else "overall")].append(row)
@@ -63,6 +68,7 @@ def generation_aggregate(rows, by_qtype):
 
 
 def grouped_bars(path, labels, series, title, ylabel):
+    """根据真实聚合值绘制并保存分组柱状图。"""
     width = 0.8 / max(1, len(series))
     positions = list(range(len(labels)))
     figure, axis = plt.subplots(figsize=(10, 5.5))
@@ -75,6 +81,7 @@ def grouped_bars(path, labels, series, title, ylabel):
 
 
 def main():
+    """汇总最终检索、生成、验证和延迟结果并生成图表。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dir", default="results/final")
     args = parser.parse_args()

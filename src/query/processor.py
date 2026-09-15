@@ -27,6 +27,7 @@ ENTITY_ALIASES = {
 
 
 def _contains_alias(text: str, alias: str) -> bool:
+    """使用英文词边界或中文子串规则判断查询是否包含实体别名。"""
     # Word-boundary matching for ASCII aliases; substring matching for CJK text.
     if re.search(r"[\u4e00-\u9fff]", alias):
         return alias in text
@@ -35,6 +36,7 @@ def _contains_alias(text: str, alias: str) -> bool:
 
 
 def extract_entities(query: str) -> List[str]:
+    """从查询中识别预定义别名对应的规范实体名称。"""
     found = []
     for canonical, aliases in ENTITY_ALIASES.items():
         if any(_contains_alias(query, alias) for alias in aliases):
@@ -43,6 +45,7 @@ def extract_entities(query: str) -> List[str]:
 
 
 def classify_intent(query: str, entities: List[str]) -> str:
+    """根据查询关键词和实体数量推断查询意图类型。"""
     q = query.lower()
 
     summary_keywords = [
@@ -78,6 +81,7 @@ def classify_intent(query: str, entities: List[str]) -> str:
 
 
 def process_query(query: str) -> Dict[str, object]:
+    """标准化查询并返回实体识别与意图分类结果。"""
     query = query.strip()
     entities = extract_entities(query)
     return {

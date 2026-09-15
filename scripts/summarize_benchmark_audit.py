@@ -13,11 +13,13 @@ SUCCESS_STATUSES = {"llm_evidence_supported", "llm_evidence_not_supported"}
 
 
 def read_jsonl(path: str | Path) -> list[dict]:
+    """读取审计或 benchmark JSONL 数据。"""
     with Path(path).open(encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
 
 
 def support_stats(records: list[dict]) -> dict:
+    """计算成功审计、证据支持、失败和支持分统计。"""
     successful = [record for record in records if record["llm_status"] in SUCCESS_STATUSES]
     scores = [float(record.get("llm_support_score", 0)) for record in successful]
     supported = sum(
@@ -46,6 +48,7 @@ def support_stats(records: list[dict]) -> dict:
 
 
 def grouped_stats(records: list[dict], field: str) -> dict:
+    """按指定字段分组计算 evidence-support 统计。"""
     groups = defaultdict(list)
     for record in records:
         groups[record[field]].append(record)
@@ -58,6 +61,7 @@ def build_summary(
     run_manifest: dict,
     audit_path: Path,
 ) -> tuple[dict, list[dict]]:
+    """构建审计总表、完整性检查、可靠性统计和人工复核队列。"""
     benchmark_by_id = {item["qid"]: item for item in benchmark_items}
     enriched = []
     for record in records:
@@ -217,6 +221,7 @@ def build_summary(
 
 
 def main() -> None:
+    """读取 canonical audit 并写出汇总 JSON 与人工复核 JSONL。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--audit", default="results/core80_audit.jsonl")
     parser.add_argument("--benchmark", default="benchmark/gnn_qa_core80.jsonl")

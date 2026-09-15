@@ -19,8 +19,14 @@ p.add_argument('--skip-existing',action='store_true')
 p.add_argument('--sleep',type=float,default=0.0)
 args=p.parse_args()
 
-def slug(s): return re.sub(r'[^a-z0-9]+','_',s.casefold()).strip('_')[:55]
-def norm(s): return re.sub(r'[^a-z0-9]+',' ',s.casefold()).strip()
+def slug(s):
+    """把论文标题转换为长度受限的稳定文件/论文标识符。"""
+    return re.sub(r'[^a-z0-9]+','_',s.casefold()).strip('_')[:55]
+
+
+def norm(s):
+    """将标题规范化为用于词项相似度比较的字符串。"""
+    return re.sub(r'[^a-z0-9]+',' ',s.casefold()).strip()
 
 manifest_path=Path(args.manifest)
 if manifest_path.exists():
@@ -54,6 +60,7 @@ for i,it in enumerate(items,1):
     # Pick title with highest token overlap rather than blindly taking result[0].
     target=set(norm(title).split())
     def overlap(r):
+        """计算候选 arXiv 标题与目标标题的词项 Jaccard 相似度。"""
         cand=set(norm(r.title).split());return len(target & cand)/max(1,len(target | cand))
     r=max(results,key=overlap); score=overlap(r)
     pdf=Path(args.pdf_dir)/f'{pid}.pdf'

@@ -4,9 +4,11 @@ from stage2.schema import Evidence
 from stage2.llm.client import LLMClient
 
 def cited_papers(answer: str):
+    """提取答案方括号中符合 paper_id 格式的论文引用。"""
     return re.findall(r'\[([A-Za-z0-9_.-]+)\]', answer)
 
 def deterministic_citation_check(answer: str, evidence: List[Evidence]) -> Dict:
+    """检查答案引用是否存在于提供证据的论文来源中。"""
     cited=cited_papers(answer)
     available=set()
     for e in evidence:
@@ -35,6 +37,7 @@ def split_atomic_claims(answer: str) -> List[str]:
 
 
 def verify_claims_llm(question: str, answer: str, evidence: List[Evidence], client: Optional[LLMClient] = None) -> Dict:
+    """让 LLM 逐条判断确定性拆分的 claims 是否获得证据直接支持。"""
     client=client or LLMClient()
     ev='\n'.join([f'E{i+1} paper={e.paper_id}: {e.content[:1200]}' for i,e in enumerate(evidence)])
     claims=split_atomic_claims(answer)

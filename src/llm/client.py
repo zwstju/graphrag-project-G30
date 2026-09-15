@@ -9,6 +9,7 @@ load_dotenv()
 
 
 def _env_flag(name: str, default: bool) -> bool:
+    """读取布尔型环境变量，并在变量缺失时返回指定默认值。"""
     value = os.getenv(name)
     if value is None:
         return default
@@ -16,6 +17,7 @@ def _env_flag(name: str, default: bool) -> bool:
 
 
 def _mock_answer(prompt: str) -> str:
+    """在 mock 模式下返回固定答案，便于无外部模型时验证调用链。"""
     return (
         "[MOCK LLM] Backend、Retriever、Prompt Builder 已成功形成闭环。"
         "请在 .env 中配置真实 LLM_API_BASE / LLM_API_KEY / LLM_MODEL，"

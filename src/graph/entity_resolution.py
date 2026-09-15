@@ -21,6 +21,7 @@ ALIASES = {
 
 
 def canonicalize_entity(name: str) -> str:
+    """将实体别名规范化为知识图谱使用的统一名称。"""
     name = normalize_text(name)
     return ALIASES.get(normalize_key(name), name)
 

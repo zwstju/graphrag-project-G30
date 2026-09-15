@@ -27,6 +27,7 @@ SECTION_PRIOR = {
 }
 
 def qtype(query: str) -> str:
+    """仅根据查询文本推断 Fact、Relation、Comparison 或 Multi-hop 类型。"""
     q=f' {query.casefold()} '
     if any(x in q for x in QTYPE_MULTI_HOP): return 'multi_hop'
     if any(x in q for x in QTYPE_COMPARISON): return 'comparison'
@@ -34,6 +35,7 @@ def qtype(query: str) -> str:
     return 'fact'
 
 def tokens(text: str):
+    """提取英文词项及中文单字/双字特征用于实体重叠计算。"""
     en=re.findall(r'[a-z][a-z0-9]*(?:[-_][a-z0-9]+)*', text.casefold())
     cjk_runs=re.findall(r'[\u4e00-\u9fff]+', text)
     zh=[]
@@ -45,21 +47,25 @@ def tokens(text: str):
 
 class EvidenceReranker:
     def __init__(self, embedder, weights: Optional[Dict[str,float]] = None):
+        """保存嵌入器并初始化可解释 rerank 特征权重。"""
         self.embedder=embedder
         self.weights=weights or {'semantic':0.50,'entity':0.18,'relation':0.12,'section':0.10,'source':0.10}
 
     def _semantic(self, query: str, evidence: List[Evidence]) -> List[float]:
+        """计算查询与每条证据的归一化嵌入相似度。"""
         texts=[query]+[e.content for e in evidence]
         vec=np.asarray(self.embedder.encode(texts, normalize_embeddings=True, show_progress_bar=False),dtype='float32')
         q=vec[0]; scores=vec[1:]@q
         return [float((s+1)/2) for s in scores]
 
     def _entity(self, query: str, content: str) -> float:
+        """计算查询和证据之间经截断归一化的词项重叠分数。"""
         q=tokens(query); e=tokens(content)
         if not q: return 0.0
         return min(1.0, len(q & e)/max(1,min(len(q),4)))
 
     def _relation(self, query: str, e: Evidence) -> float:
+        """根据查询关系意图和证据实际关系/内容计算关系匹配分。"""
         query_text=query.casefold()
         expected={
             relation for relation, keywords in RELATION_INTENTS.items()
@@ -88,17 +94,21 @@ class EvidenceReranker:
         return 0.45 if qtype(query) in {'relation','comparison'} else 0.35
 
     def _section(self, query: str, e: Evidence) -> float:
+        """按推断题型与论文章节先验计算章节适配分。"""
         return SECTION_PRIOR.get(qtype(query),{}).get(e.section,0.0)/0.10 if e.section else 0.0
 
     def _source(self, e: Evidence) -> float:
+        """根据 Vector、Triple 或 Path 来源返回解释性来源先验。"""
         return {'path':1.0,'triple':0.9,'vector':0.8}.get(e.source_type,0.5)
 
     def _retrieval(self, e: Evidence) -> float:
+        """将不同检索器的原始分数映射到零到一范围。"""
         if e.source_type == 'vector':
             return min(1.0, max(0.0, (e.retrieval_score + 1.0) / 2.0))
         return min(1.0, max(0.0, 1.0 - math.exp(-e.retrieval_score)))
 
     def rerank(self, query: str, evidence: List[Evidence], top_k: int = 6) -> List[Evidence]:
+        """计算并保存各项得分，去除完全重复证据后选择前 top_k 条。"""
         if not evidence: return []
         sem=self._semantic(query,evidence)
         for i,e in enumerate(evidence):

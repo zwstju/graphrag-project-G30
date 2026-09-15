@@ -19,6 +19,7 @@ DEFAULT_QUERIES = [
 
 
 def preview(text: str, limit: int) -> str:
+    """压缩文本空白并按给定字符数生成预览。"""
     compact = re.sub(r"\s+", " ", text).strip()
     if len(compact) <= limit:
         return compact
@@ -26,6 +27,7 @@ def preview(text: str, limit: int) -> str:
 
 
 def main() -> None:
+    """加载持久化向量索引并执行定性查询冒烟检查。"""
     load_dotenv()
     parser = argparse.ArgumentParser(
         description="Qualitative sanity check for the persisted Stage 2 vector index."

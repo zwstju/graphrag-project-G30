@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List
 
 
 def _env_flag(name: str, default: bool) -> bool:
+    """读取布尔型环境变量，并在缺失时使用默认值。"""
     value = os.getenv(name)
     if value is None:
         return default
@@ -13,6 +14,7 @@ def _env_flag(name: str, default: bool) -> bool:
 
 
 def _load_callable(module_name: str, function_name: str) -> Callable[..., Any]:
+    """动态导入模块并取得指定的可调用检索函数。"""
     module = importlib.import_module(module_name)
     func = getattr(module, function_name, None)
     if not callable(func):
@@ -23,6 +25,7 @@ def _load_callable(module_name: str, function_name: str) -> Callable[..., Any]:
 
 
 def _mock_vector_results(query: str, top_k: int) -> List[Dict[str, Any]]:
+    """生成符合向量检索接口的固定 mock 结果。"""
     sample = [
         {
             "paper_id": "vgae_2016",
@@ -51,6 +54,7 @@ def _mock_vector_results(query: str, top_k: int) -> List[Dict[str, Any]]:
 
 
 def _mock_graph_results(query: str, top_k: int) -> Dict[str, Any]:
+    """生成包含实体、三元组和路径的固定 mock 图结果。"""
     triples = [
         {
             "source": "VGAE",
@@ -85,6 +89,7 @@ def _mock_graph_results(query: str, top_k: int) -> Dict[str, Any]:
 
 
 def retrieve_vector(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+    """调用配置的向量检索器，并在允许时回退到 mock 数据。"""
     module_name = os.getenv("VECTOR_RETRIEVER_MODULE", "src.vector.retriever")
     function_name = os.getenv("VECTOR_RETRIEVER_FUNCTION", "retrieve_vector")
     allow_mock = _env_flag("ALLOW_MOCK_RETRIEVERS", True)
@@ -104,6 +109,7 @@ def retrieve_vector(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
 
 
 def retrieve_graph(query: str, top_k: int = 5) -> Dict[str, Any]:
+    """调用配置的图检索器，并规范化返回结构或回退到 mock 数据。"""
     module_name = os.getenv("GRAPH_RETRIEVER_MODULE", "src.graph.retriever")
     function_name = os.getenv("GRAPH_RETRIEVER_FUNCTION", "retrieve_graph")
     allow_mock = _env_flag("ALLOW_MOCK_RETRIEVERS", True)

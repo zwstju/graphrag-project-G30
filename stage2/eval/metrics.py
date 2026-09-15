@@ -2,9 +2,11 @@ import re
 from typing import Dict, List
 
 def norm(s):
+    """将文本转换为便于词级指标比较的规范形式。"""
     return re.sub(r'\s+',' ',re.sub(r'[^a-z0-9\u4e00-\u9fff ]+',' ',(s or '').casefold())).strip()
 
 def token_f1(pred: str, gold: str) -> float:
+    """计算预测答案和候选答案之间的词项 F1。"""
     p=norm(pred).split(); g=norm(gold).split()
     if not p or not g: return 0.0
     from collections import Counter

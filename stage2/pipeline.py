@@ -19,6 +19,7 @@ METHOD_LABELS = {
 
 class Stage2System:
     def __init__(self, config_path='configs/default.json'):
+        """加载配置、持久化向量索引、图检索器和规则 reranker。"""
         self.config=json.load(open(config_path,encoding='utf-8'))
         model=os.getenv('EMBED_MODEL',self.config['embedding_model'])
         device=self.config.get('embedding_device','auto')
@@ -32,6 +33,7 @@ class Stage2System:
         self.reranker=EvidenceReranker(self.vector.model,self.config.get('rerank_weights'))
 
     def retrieve(self, query: str, method: str='full'):
+        """按实验条件执行 Vector、Graph、直接融合或证据重排。"""
         # These are Stage 2 controlled conditions, not the original Stage 1
         # implementations: vector uses structured chunks and graph uses configured hops.
         vc=self.config.get('vector_candidates',12); gc=self.config.get('graph_candidates',12); fk=self.config.get('final_evidence_k',6)
@@ -45,6 +47,7 @@ class Stage2System:
         raise ValueError(f'unknown method={method}')
 
     def answer(self, query: str, method: str='full', verify: bool=False) -> Dict:
+        """完成检索、答案生成、引用检查及可选 claim 验证并记录延迟。"""
         t0=time.perf_counter(); ev=self.retrieve(query,method); t1=time.perf_counter()
         ans=answer_question(query,ev); t2=time.perf_counter()
         checks=deterministic_citation_check(ans,ev)

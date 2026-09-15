@@ -13,6 +13,7 @@ TRIPLES_PATH = PROJECT_ROOT / "data" / "graph" / "triples.jsonl"
 
 
 def build_graph_data() -> list[dict]:
+    """从论文语料分块抽取三元组，完成实体消歧去重并持久化知识图谱数据。"""
     if not PAPERS_PATH.exists():
         raise FileNotFoundError(
             f"找不到 {PAPERS_PATH}，请先准备 data/processed/papers.jsonl"

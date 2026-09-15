@@ -9,6 +9,7 @@ from stage2.rerank.evidence_reranker import qtype
 
 
 def main() -> None:
+    """在 Core80 标注上评估纯查询文本题型规则并保存混淆矩阵。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", default="benchmark/gnn_qa_core80.jsonl")
     parser.add_argument("--output", default="results/final/qtype_classifier_eval.json")

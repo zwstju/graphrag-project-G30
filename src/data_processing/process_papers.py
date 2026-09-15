@@ -12,6 +12,7 @@ LIGATURES = str.maketrans({"ﬀ": "ff", "ﬁ": "fi", "ﬂ": "fl", "ﬃ": "ffi", 
 
 
 def clean_page(text, page_number, vocabulary):
+    """清理单页 PDF 文本中的页眉、页码、断词和异常换行。"""
     text = text.translate(LIGATURES).replace("\x00", "").replace("\u00ad", "")
     lines = text.splitlines()
     kept = []
@@ -27,6 +28,7 @@ def clean_page(text, page_number, vocabulary):
     # Join hyphenated line breaks only when the joined word occurs elsewhere in this PDF.
     # Otherwise preserve the hyphen: e.g. graph-structured and Weisfeiler-Lehman.
     def join_word(match):
+        """依据全文词表决定是否合并跨行连字符单词。"""
         left, right = match.group(1), match.group(2)
         return left + ("" if (left + right).lower() in vocabulary else "-") + right
     text = re.sub(r"([A-Za-z]+)-\n([a-z]+)\b", join_word, text)
@@ -62,6 +64,7 @@ def prepare_page(text, item, page_number):
 
 
 def main():
+    """读取论文清单、抽取并校验 PDF 文本，然后写出共享语料与质量报告。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=ROOT / "data")
     args = parser.parse_args()

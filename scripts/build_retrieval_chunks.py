@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 def sha256_file(path: Path) -> str:
+    """流式计算输入文件的 SHA-256。"""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
@@ -15,6 +16,7 @@ def sha256_file(path: Path) -> str:
 
 
 def build_retrieval_chunks(source_path: Path, output_path: Path) -> dict:
+    """过滤 References 分块并原子写出经完整性校验的检索语料。"""
     source_hash_before = sha256_file(source_path)
     source_count = 0
     excluded_references = 0
@@ -93,6 +95,7 @@ def build_retrieval_chunks(source_path: Path, output_path: Path) -> dict:
 
 
 def main() -> None:
+    """解析配置、构建检索语料并打印过滤统计。"""
     parser = argparse.ArgumentParser(
         description="Exclude canonical References chunks from the Stage 2 retrieval corpus."
     )

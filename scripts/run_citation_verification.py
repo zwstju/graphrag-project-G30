@@ -17,10 +17,12 @@ from stage2.verify.citation import verify_claims_llm
 
 
 def text_sha256(text: str) -> str:
+    """计算答案文本的 SHA-256 以证明验证过程未重新生成答案。"""
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
+    """将当前 claim 验证结果写入 UTF-8 CSV。"""
     fields = list(rows[0]) if rows else []
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
@@ -28,6 +30,7 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def main() -> None:
+    """对保存的 Rerank 答案执行有界重试的 post-hoc claim 验证。"""
     load_dotenv()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--generation", default="results/final/generation_outputs.jsonl")

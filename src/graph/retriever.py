@@ -20,6 +20,7 @@ _triples = None
 
 
 def _load_graph():
+    """从持久化三元组惰性构建并缓存内存中的有向多重图。"""
     global _graph, _triples
 
     if _graph is not None:
@@ -117,6 +118,7 @@ def _score_triple(query: str, triple: dict, seeds: list[str]) -> float:
 
 
 def _edge_relation(a: str, b: str) -> str:
+    """返回两个相邻节点之间可用的关系名称。"""
     if _graph.has_edge(a, b):
         data = _graph.get_edge_data(a, b)
         key = next(iter(data))

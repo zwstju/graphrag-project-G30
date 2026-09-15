@@ -35,6 +35,7 @@ class AskRequest(BaseModel):
 
 
 def _count_jsonl(path: Path) -> int:
+    """统计 JSONL 文件中的非空记录数。"""
     if not path.exists():
         return 0
     with path.open("r", encoding="utf-8") as f:
@@ -42,11 +43,13 @@ def _count_jsonl(path: Path) -> int:
 
 
 def _paper_count() -> int:
+    """返回当前标准论文语料包含的论文数量。"""
     path = ROOT / "data" / "processed" / "papers.jsonl"
     return _count_jsonl(path)
 
 
 def _graph_stats() -> tuple[int, int]:
+    """从三元组文件统计去重节点数和边记录数。"""
     path = ROOT / "data" / "graph" / "triples.jsonl"
     if not path.exists():
         return 0, 0
@@ -85,6 +88,7 @@ def _graph_stats() -> tuple[int, int]:
 
 
 def _plain(value: Any) -> Any:
+    """递归把数据类、Pydantic 对象和容器转换为可序列化普通值。"""
     if is_dataclass(value):
         return asdict(value)
     if hasattr(value, "model_dump"):
@@ -105,6 +109,7 @@ def _plain(value: Any) -> Any:
 
 
 def _evidence_to_dict(e: Any, rank: int) -> Dict[str, Any]:
+    """把不同来源的 Evidence 对象统一转换为前端需要的字典结构。"""
     d = _plain(e)
     if not isinstance(d, dict):
         d = {"content": str(d)}
@@ -161,6 +166,7 @@ TRIPLE_RE = re.compile(
 
 
 def _triple_from_evidence(e: Dict[str, Any]) -> Dict[str, str] | None:
+    """从 Evidence 元数据或文本内容中恢复一条图三元组。"""
     md = e.get("metadata") or {}
 
     source = md.get("source") or md.get("head") or md.get("subject")
@@ -188,10 +194,12 @@ def _triple_from_evidence(e: Dict[str, Any]) -> Dict[str, str] | None:
 
 
 def _graph_from_evidence(evidence: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """将三元组和路径证据转换为去重后的前端图节点与边。"""
     nodes: Dict[str, Dict[str, str]] = {}
     edges: List[Dict[str, str]] = []
 
     def add_node(node_id: str, node_type: str = "entity") -> None:
+        """按节点 ID 将实体或论文节点加入当前可视化图。"""
         if not node_id:
             return
         nodes.setdefault(
@@ -283,6 +291,7 @@ def _graph_from_evidence(evidence: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 @app.get("/api/health")
 def health() -> Dict[str, Any]:
+    """返回 Stage 2 服务、语料、图谱和可用方法的状态摘要。"""
     graph_nodes, graph_edges = _graph_stats()
     return {
         "status": "ok",
@@ -305,6 +314,7 @@ def health() -> Dict[str, Any]:
 
 @app.post("/api/ask")
 def ask(request: AskRequest) -> Dict[str, Any]:
+    """运行 Stage 2 问答并返回答案、证据、图结构和延迟信息。"""
     query = request.query.strip()
     if not query:
         raise HTTPException(status_code=400, detail="Query must not be empty.")
@@ -395,6 +405,7 @@ if FRONTEND_DIR.exists():
 
 @app.get("/")
 def frontend() -> FileResponse:
+    """返回 Stage 2 前端首页，文件缺失时给出 404。"""
     index = FRONTEND_DIR / "index.html"
     if not index.exists():
         raise HTTPException(

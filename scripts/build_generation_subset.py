@@ -10,6 +10,7 @@ from stage2.retrieval.vector import sha256_file
 
 
 def main() -> None:
+    """按题型内 QID 哈希确定性选择每类相同数量的生成评测题。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", default="benchmark/gnn_qa_core69_audit_filtered.jsonl")
     parser.add_argument("--output", default="benchmark/gnn_qa_core32_generation_stratified.jsonl")

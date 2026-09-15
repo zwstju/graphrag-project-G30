@@ -7,6 +7,7 @@ from stage2.data.fixed_chunker import build_fixed_chunks
 
 
 def main() -> None:
+    """读取固定分块配置并生成 1200/200 控制语料。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/fixed_chunk.json")
     args = parser.parse_args()

@@ -18,6 +18,7 @@ SUPPORTED_DEVICES = {"auto", "cuda", "cpu"}
 
 
 def sha256_file(path: str | Path) -> str:
+    """流式计算文件的 SHA-256 摘要。"""
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
@@ -26,6 +27,7 @@ def sha256_file(path: str | Path) -> str:
 
 
 def resolve_device(requested_device: str) -> str:
+    """校验设备选项，并在 auto 模式下根据 CUDA 可用性选择设备。"""
     requested = requested_device.casefold()
     if requested not in SUPPORTED_DEVICES:
         choices = ", ".join(sorted(SUPPORTED_DEVICES))
@@ -43,12 +45,14 @@ def resolve_device(requested_device: str) -> str:
 
 
 def gpu_name(device: str) -> str | None:
+    """在 CUDA 模式下返回当前 GPU 名称，否则返回空值。"""
     if device != "cuda":
         return None
     return torch.cuda.get_device_name(torch.cuda.current_device())
 
 
 def _temporary_path(target: Path) -> Path:
+    """在目标目录创建用于原子持久化的临时文件路径。"""
     target.parent.mkdir(parents=True, exist_ok=True)
     handle = tempfile.NamedTemporaryFile(
         dir=target.parent,
@@ -62,6 +66,7 @@ def _temporary_path(target: Path) -> Path:
 
 class VectorIndex:
     def __init__(self, model_name: str = "BAAI/bge-m3", device: str = "auto"):
+        """初始化指定设备上的嵌入模型和空向量索引状态。"""
         self.model_name = model_name
         self.requested_device = device
         self.device = resolve_device(device)
@@ -76,6 +81,7 @@ class VectorIndex:
         batch_size: int = 16,
         show_progress_bar: bool = False,
     ) -> np.ndarray:
+        """批量编码文本并返回 L2 归一化的 float32 向量矩阵。"""
         vecs = self.model.encode(
             texts,
             batch_size=batch_size,
@@ -92,6 +98,7 @@ class VectorIndex:
         manifest_path: str,
         batch_size: int = 16,
     ) -> int:
+        """编码检索语料、构建 FAISS 索引并原子写出索引及完整性清单。"""
         chunks = []
         with open(chunks_path, encoding="utf-8") as handle:
             for line_number, line in enumerate(handle, start=1):
@@ -186,6 +193,7 @@ class VectorIndex:
         manifest_path: str | None = None,
         corpus_path: str | None = None,
     ):
+        """加载持久化索引和元数据，并按需验证构建清单。"""
         index_path = Path(faiss_path)
         metadata_path = Path(meta_path)
         index = faiss.read_index(str(index_path))
@@ -231,6 +239,7 @@ class VectorIndex:
         metadata_path: Path,
         corpus_path: Path | None,
     ) -> None:
+        """验证模型、维度、计数及文件哈希是否与索引清单一致。"""
         required = {
             "embedding_model",
             "corpus_sha256",
@@ -279,6 +288,7 @@ class VectorIndex:
                 )
 
     def search(self, query: str, top_k: int = 12) -> List[Evidence]:
+        """编码查询并从已加载的 FAISS 索引返回最高分 Evidence。"""
         if self.index is None:
             raise RuntimeError("VectorIndex not loaded/built")
         query_matrix = self._encode([query], batch_size=1)

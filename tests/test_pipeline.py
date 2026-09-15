@@ -7,6 +7,7 @@ from src.hybrid.pipeline import answer_query
 
 
 def test_hybrid_pipeline_contract():
+    """验证混合检索问答结果满足统一的响应字段契约。"""
     result = answer_query(
         "VGAE 和 GCN 有什么关系？",
         mode="hybrid",
@@ -24,6 +25,7 @@ def test_hybrid_pipeline_contract():
 
 
 def test_vector_mode_has_empty_graph_contract():
+    """验证纯向量模式返回结构完整但内容为空的图结果。"""
     result = answer_query("What is VGAE?", mode="vector")
     assert result["vector_results"]
     assert result["graph_results"] == {
@@ -35,6 +37,7 @@ def test_vector_mode_has_empty_graph_contract():
 
 
 def test_graph_mode_has_empty_vector_contract():
+    """验证纯图模式不混入向量证据并能返回图三元组。"""
     result = answer_query("VGAE 和 GCN 有什么关系？", mode="graph")
     assert result["vector_results"] == []
     assert result["graph_results"]["triples"]

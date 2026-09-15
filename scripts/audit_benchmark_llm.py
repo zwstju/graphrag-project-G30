@@ -26,6 +26,7 @@ AUDIT_METHOD = "gold-aware evidence mining for benchmark validation"
 
 
 def read_jsonl(path: str | Path) -> list[dict]:
+    """读取 JSONL 文件，并在遇到无效 JSON 时报告准确行号。"""
     items = []
     with Path(path).open(encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, start=1):
@@ -39,10 +40,12 @@ def read_jsonl(path: str | Path) -> list[dict]:
 
 
 def text_hash(text: str) -> str:
+    """计算文本的 SHA-256 摘要，用于证据内容完整性校验。"""
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def validate_retrieval_corpus(chunks: list[dict]) -> dict[str, int]:
+    """确认审计语料不含 References，并统计每篇论文的分块数量。"""
     references = [chunk for chunk in chunks if chunk.get("section") == "References"]
     if references:
         raise RuntimeError(
@@ -58,6 +61,7 @@ def select_gold_paper_evidence(
     gold_papers: list[str],
     top_k_per_paper: int,
 ) -> tuple[list[dict], dict[str, int]]:
+    """按每篇金标准论文的独立配额选择候选答案审计证据。"""
     if top_k_per_paper <= 0:
         raise ValueError("top_k_per_paper must be greater than zero")
 
@@ -94,6 +98,7 @@ def build_balanced_context(
     gold_papers: list[str],
     max_chars_per_paper: int,
 ) -> tuple[str, dict[str, int]]:
+    """按论文均衡截断所选证据，并构造供审计模型使用的上下文。"""
     if max_chars_per_paper <= 0:
         raise ValueError("max_chars_per_paper must be greater than zero")
 
@@ -121,6 +126,7 @@ def build_balanced_context(
 
 
 def parse_audit_response(raw: str) -> dict:
+    """解析并规范化审计模型返回的 JSON 支持判断。"""
     if not raw.strip():
         raise ValueError("Audit model returned an empty response")
     match = re.search(r"\{.*\}", raw, re.S)
@@ -146,6 +152,7 @@ def audit_with_retries(
     prompt: str,
     max_attempts: int,
 ) -> tuple[dict | None, list[str], list[str], list[str], int]:
+    """按有界重试策略调用审计模型，并分别记录解析与传输错误。"""
     if max_attempts <= 0:
         raise ValueError("max_attempts must be greater than zero")
     responses = []
@@ -182,6 +189,7 @@ def audit_with_retries(
 
 
 def write_summary_csv(records: list[dict], path: Path) -> None:
+    """将详细审计记录写成便于人工浏览的紧凑 CSV 摘要。"""
     fields = [
         "id",
         "qtype",
@@ -219,6 +227,7 @@ def write_summary_csv(records: list[dict], path: Path) -> None:
 
 
 def main() -> None:
+    """执行金论文感知的基准证据审计并保存结果与复现清单。"""
     run_started_perf = time.perf_counter()
     run_timestamp = datetime.now(timezone.utc).isoformat()
     load_dotenv()

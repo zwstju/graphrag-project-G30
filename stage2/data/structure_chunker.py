@@ -50,11 +50,13 @@ KNOWN_OCR_REPAIRS = {
 }
 
 def normalize_ws(text: str) -> str:
+    """规范换行和水平空白，同时去除文本首尾空白。"""
     text = text.replace("\r", "")
     text = re.sub(r"[ \t]+", " ", text)
     return text.strip()
 
 def repair_heading(raw: str) -> str:
+    """清理标题符号并修复已知 PDF OCR 标题错误。"""
     s = normalize_ws(raw).strip(" :-–—")
     low = s.casefold()
     if low in KNOWN_OCR_REPAIRS:
@@ -62,6 +64,7 @@ def repair_heading(raw: str) -> str:
     return s
 
 def canonical_section(raw: str) -> Optional[str]:
+    """将原始标题映射到预定义的科研论文标准章节。"""
     # Repair known OCR glitches before treating a leading Roman numeral as numbering.
     s = repair_heading(raw)
 
@@ -85,6 +88,7 @@ def canonical_section(raw: str) -> Optional[str]:
     return None
 
 def detect_heading(line: str) -> Optional[str]:
+    """保守判断单行文本是否为可识别的章节标题。"""
     s = normalize_ws(line)
     if not s or len(s) > 90:
         return None
@@ -95,6 +99,7 @@ def detect_heading(line: str) -> Optional[str]:
     return canonical_section(s)
 
 def split_sections(text: str) -> List[Tuple[str, str]]:
+    """按识别出的标题把论文文本拆分为章节及其正文。"""
     lines = text.splitlines()
     current = "Unknown"
     body: List[str] = []
@@ -120,6 +125,7 @@ def split_sections(text: str) -> List[Tuple[str, str]]:
     return out or [("Unknown", text)]
 
 def sentence_split(text: str) -> List[str]:
+    """在常见中英文句末标点后切分规范化文本。"""
     text = normalize_ws(text)
     if not text:
         return []
@@ -172,6 +178,7 @@ def chunk_section(
     max_chars: int = 1800,
     overlap_chars: int = 180,
 ) -> List[str]:
+    """优先按段落和句子边界将单个章节切成带语义重叠的文本块。"""
     paras = [
         normalize_ws(p)
         for p in re.split(r"\n\s*\n+", section_text)
@@ -184,6 +191,7 @@ def chunk_section(
     buf = ""
 
     def flush():
+        """保存当前缓冲区，并以完整尾句初始化下一个重叠缓冲区。"""
         nonlocal buf
         old = buf.strip()
         if len(old) >= 80:
@@ -233,6 +241,7 @@ def chunk_paper(
     max_chars: int = 1800,
     overlap_chars: int = 180,
 ) -> List[Dict]:
+    """为单篇论文生成带章节、论文和稳定 chunk ID 的结构化文本块。"""
     pid = paper.get("paper_id") or paper.get("id") or "unknown"
     title = paper.get("title", "")
     year = paper.get("year", "")
@@ -259,6 +268,7 @@ def build_chunks(
     max_chars: int = 1800,
     overlap_chars: int = 180,
 ) -> int:
+    """读取论文 JSONL、生成结构化分块并返回输出记录数。"""
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     count = 0
     with open(papers_path, "r", encoding="utf-8") as fin, open(

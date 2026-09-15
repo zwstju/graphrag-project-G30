@@ -42,11 +42,13 @@ app.add_middleware(
 
 @app.get("/health")
 def health() -> Dict[str, str]:
+    """返回基础后端服务的健康状态。"""
     return {"status": "ok"}
 
 
 @app.post("/ask", response_model=AskResponse)
 def ask(request: AskRequest) -> AskResponse:
+    """执行指定模式的问答流水线并转换为 API 响应。"""
     try:
         result = answer_query(request.query, request.mode)
         print("\n===== BACKEND DEBUG =====")

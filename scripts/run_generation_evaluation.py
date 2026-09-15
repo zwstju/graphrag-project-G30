@@ -22,10 +22,12 @@ METHODS = ("structured_vector", "structured_vanilla_hybrid", "structured_hybrid_
 
 
 def read_jsonl(path: Path) -> list[dict]:
+    """读取生成评测所需的 JSONL 记录。"""
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 def retry_call(function, max_attempts: int = 3):
+    """在有界次数内重试空响应或异常，并返回结果、次数和错误列表。"""
     errors = []
     for attempt in range(1, max_attempts + 1):
         try:
@@ -39,6 +41,7 @@ def retry_call(function, max_attempts: int = 3):
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
+    """将当前请求级生成结果写入 UTF-8 CSV。"""
     fields = list(rows[0]) if rows else []
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
@@ -46,6 +49,7 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def main() -> None:
+    """使用保存的证据完成三方法生成、统一判分和请求级持久化。"""
     load_dotenv()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", default="benchmark/gnn_qa_core32_generation_stratified.jsonl")

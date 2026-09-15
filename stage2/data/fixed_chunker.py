@@ -37,6 +37,7 @@ def build_fixed_chunks(
     chunk_size: int = 1200,
     overlap: int = 200,
 ) -> int:
+    """为全部论文生成固定窗口控制块并返回写出的块数量。"""
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     count = 0

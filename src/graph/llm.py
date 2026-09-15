@@ -8,6 +8,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def chat(messages: list[dict], temperature: float = 0.0) -> str:
+    """调用项目配置的聊天模型，并返回模型生成的文本内容。"""
     load_dotenv(PROJECT_ROOT / ".env")
 
     base_url = os.getenv("LLM_API_BASE", "https://api.deepseek.com").rstrip("/")

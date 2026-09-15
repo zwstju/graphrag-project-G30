@@ -9,6 +9,7 @@ from src.retrieval.adapters import retrieve_graph, retrieve_vector
 
 
 def empty_graph_result() -> Dict[str, List[Any]]:
+    """创建符合 Graph 检索接口约定的空结果结构。"""
     return {
         "entities": [],
         "triples": [],
@@ -22,6 +23,7 @@ def retrieve_hybrid(
     vector_top_k: int = 5,
     graph_top_k: int = 5,
 ) -> Dict[str, Any]:
+    """分别执行向量与图检索，并返回未经融合的两组候选结果。"""
     return {
         "vector_results": retrieve_vector(query, top_k=vector_top_k),
         "graph_results": retrieve_graph(query, top_k=graph_top_k),
@@ -32,6 +34,7 @@ def _collect_references(
     vector_results: List[Dict[str, Any]],
     graph_results: Dict[str, Any],
 ) -> List[Dict[str, str]]:
+    """从向量和图证据中汇总去重后的论文引用信息。"""
     refs: Dict[str, Dict[str, str]] = {}
 
     for item in vector_results:
@@ -64,6 +67,7 @@ def answer_query(
     vector_top_k: int = 5,
     graph_top_k: int = 5,
 ) -> Dict[str, Any]:
+    """按指定检索模式组织证据、构建提示词并生成最终回答。"""
     query = query.strip()
     if not query:
         raise ValueError("query must not be empty")

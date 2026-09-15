@@ -28,10 +28,12 @@ METHODS = (
 
 
 def read_jsonl(path: Path) -> list[dict]:
+    """读取指定 JSONL artifact 的全部非空记录。"""
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 def evidence_key(evidence) -> str:
+    """根据证据类型、内容标识和论文来源生成稳定候选键。"""
     metadata = evidence.metadata or {}
     if evidence.source_type == "vector":
         return f"vector:{metadata.get('chunk_id', evidence.evidence_id)}"
@@ -48,6 +50,7 @@ def evidence_key(evidence) -> str:
 
 
 def pool_hash(vector_ids: list[str], graph_ids: list[str]) -> str:
+    """计算保持候选顺序的 Vector/Graph 候选池哈希。"""
     payload = json.dumps(
         {"vector_candidate_ids": vector_ids, "graph_candidate_ids": graph_ids},
         ensure_ascii=False, sort_keys=True, separators=(",", ":"),
@@ -56,6 +59,7 @@ def pool_hash(vector_ids: list[str], graph_ids: list[str]) -> str:
 
 
 def direct_select(vector, graph, top_k: int):
+    """按固定配额直接拼接两类候选，并在不足时补齐证据预算。"""
     vector_quota = max(1, top_k // 2)
     selected = list(vector[:vector_quota]) + list(graph[:top_k - vector_quota])
     if len(selected) < top_k:
@@ -68,6 +72,7 @@ def direct_select(vector, graph, top_k: int):
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
+    """使用首行字段顺序写出 UTF-8 CSV。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = list(rows[0]) if rows else []
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
@@ -77,6 +82,7 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def aggregate(rows: list[dict], by_qtype: bool) -> list[dict]:
+    """按方法及可选题型聚合检索代理指标、证据数和延迟。"""
     groups = defaultdict(list)
     for row in rows:
         key = (row["method"], row["qtype"] if by_qtype else "overall")
@@ -96,6 +102,7 @@ def aggregate(rows: list[dict], by_qtype: bool) -> list[dict]:
 
 
 def main() -> None:
+    """运行 Core69 四条件检索消融并保存逐题和聚合 artifact。"""
     load_dotenv()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", default="benchmark/gnn_qa_core69_audit_filtered.jsonl")

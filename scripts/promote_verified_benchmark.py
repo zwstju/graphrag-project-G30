@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 def read_jsonl(path: str | Path) -> list[dict]:
+    """读取候选 benchmark 或 audit JSONL 记录。"""
     with Path(path).open(encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
 
@@ -20,6 +21,7 @@ def create_llm_supported_review_set(
     min_score: float,
     audit_path: str,
 ) -> list[dict]:
+    """筛选达到阈值的 LLM-supported 项，同时保持 gold answer 和人工状态不变。"""
     audits = {record["id"]: record for record in audit_records}
     output = []
     for item in benchmark_items:
@@ -48,6 +50,7 @@ def create_llm_supported_review_set(
 
 
 def main() -> None:
+    """解析筛选参数并写出仍需人工复核的 LLM-supported 数据集。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", default="benchmark/gnn_qa_core80.jsonl")
     parser.add_argument("--audit", default="results/core80_audit.jsonl")

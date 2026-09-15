@@ -4,6 +4,7 @@ from stage2.data.fixed_chunker import build_fixed_chunks, fixed_chunks
 
 
 def test_fixed_chunks_have_exact_stride_and_overlap():
+    """验证固定窗口分块严格遵循窗口大小、步长和重叠长度。"""
     chunks = fixed_chunks("x" * 2500, chunk_size=1200, overlap=200)
     assert [(start, end) for start, end, _ in chunks] == [
         (0, 1200), (1000, 2200), (2000, 2500)
@@ -12,6 +13,7 @@ def test_fixed_chunks_have_exact_stride_and_overlap():
 
 
 def test_fixed_builder_excludes_detected_references(tmp_path):
+    """验证固定分块构建器不会把检测到的参考文献写入语料。"""
     papers = tmp_path / "papers.jsonl"
     output = tmp_path / "chunks.jsonl"
     paper = {

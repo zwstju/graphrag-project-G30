@@ -16,17 +16,20 @@ from stage2.schema import Evidence
 
 class FakeVectorIndex:
     def __init__(self, evidence):
+        """用预设证据初始化可控的向量索引替身。"""
         self.evidence = evidence
         self.index = SimpleNamespace(ntotal=len(evidence))
         self.last_query = ""
 
     def search(self, query, top_k):
+        """记录查询并按预设顺序返回全部测试证据。"""
         self.last_query = query
         assert top_k == len(self.evidence)
         return self.evidence
 
 
 def make_evidence(paper_id: str, chunk_number: int, rank: int) -> Evidence:
+    """创建带论文、分块和排名信息的审计测试证据。"""
     return Evidence(
         evidence_id=f"V{rank}",
         source_type="vector",
@@ -40,6 +43,7 @@ def make_evidence(paper_id: str, chunk_number: int, rank: int) -> Evidence:
 
 
 def test_gold_aware_selection_guarantees_per_paper_quota():
+    """验证金论文感知选择为每篇论文保留独立证据配额。"""
     ranked = [
         make_evidence("p1", 1, 1),
         make_evidence("p1", 2, 2),
@@ -69,6 +73,7 @@ def test_gold_aware_selection_guarantees_per_paper_quota():
 
 
 def test_references_are_rejected_from_audit_corpus():
+    """验证证据审计拒绝包含 References 分块的检索语料。"""
     with pytest.raises(RuntimeError, match="References"):
         validate_retrieval_corpus(
             [{"paper_id": "p1", "section": "References", "text": "citation"}]
@@ -76,6 +81,7 @@ def test_references_are_rejected_from_audit_corpus():
 
 
 def test_parse_audit_response_uses_separate_status_fields():
+    """验证模型支持判断与支持分数被解析为独立字段。"""
     result = parse_audit_response(
         '{"llm_supported": true, "llm_support_score": 0.9, '
         '"reason": "supported", "suggested_answer": "suggestion"}'
@@ -89,8 +95,10 @@ def test_parse_audit_response_uses_separate_status_fields():
 
 
 def test_audit_retries_empty_or_invalid_json():
+    """验证审计会重试空响应和格式错误的 JSON。"""
     class FakeClient:
         def __init__(self):
+            """初始化依次返回空、损坏和有效响应的迭代器。"""
             self.responses = iter(
                 [
                     "",
@@ -101,6 +109,7 @@ def test_audit_retries_empty_or_invalid_json():
             )
 
         def chat(self, messages, temperature, max_tokens):
+            """返回下一条预设审计响应。"""
             return next(self.responses)
 
     result, responses, errors, transport_errors, attempts = audit_with_retries(
@@ -114,8 +123,10 @@ def test_audit_retries_empty_or_invalid_json():
 
 
 def test_exhausted_retries_preserve_attempt_counts_and_empty_responses():
+    """验证重试耗尽后仍保留尝试次数及所有空响应。"""
     class EmptyClient:
         def chat(self, messages, temperature, max_tokens):
+            """模拟始终返回空内容的审计客户端。"""
             return ""
 
     result, responses, errors, transport_errors, attempts = audit_with_retries(
@@ -129,6 +140,7 @@ def test_exhausted_retries_preserve_attempt_counts_and_empty_responses():
 
 
 def test_llm_supported_promotion_never_changes_gold_or_claims_manual_review():
+    """验证 LLM 支持状态不会改写金答案或冒充人工验证。"""
     benchmark = [
         {
             "qid": "Q1",

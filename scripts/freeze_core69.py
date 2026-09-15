@@ -8,11 +8,13 @@ from pathlib import Path
 
 
 def read_jsonl(path: Path) -> list[dict]:
+    """读取非空 JSONL 记录。"""
     with path.open(encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
 
 
 def sha256(path: Path) -> str:
+    """流式计算文件 SHA-256。"""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
@@ -21,6 +23,7 @@ def sha256(path: Path) -> str:
 
 
 def main() -> None:
+    """按 LLM evidence supported 状态冻结 Core69 并写出组成清单。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", default="benchmark/gnn_qa_core80.jsonl")
     parser.add_argument("--audit", default="results/core80_audit.jsonl")

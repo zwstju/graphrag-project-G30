@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 
 
 def format_vector_context(results: List[Dict[str, Any]]) -> str:
+    """把向量检索结果格式化为带来源元数据的提示词上下文。"""
     if not results:
         return "(no vector evidence retrieved)"
 
@@ -35,6 +36,7 @@ def format_vector_context(results: List[Dict[str, Any]]) -> str:
 
 
 def _format_path(path: Dict[str, Any]) -> str:
+    """把图路径节点和关系转换为可读的单行文本。"""
     nodes = path.get("nodes", [])
     relations = path.get("relations", [])
     score = path.get("score")
@@ -59,6 +61,7 @@ def _format_path(path: Dict[str, Any]) -> str:
 
 
 def format_graph_context(result: Dict[str, Any]) -> str:
+    """把匹配实体、三元组和路径组织为图证据上下文。"""
     if not result:
         return "(no graph evidence retrieved)"
 
@@ -98,6 +101,7 @@ def build_prompt(
     mode: str = "hybrid",
     query_analysis: Dict[str, Any] | None = None,
 ) -> str:
+    """根据检索模式和查询分析结果构建有引用约束的回答提示词。"""
     if mode not in {"vector", "graph", "hybrid"}:
         raise ValueError(f"Unsupported mode: {mode}")
 

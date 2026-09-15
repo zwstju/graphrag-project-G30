@@ -1,4 +1,5 @@
 def split_text(text: str, chunk_size: int = 6000, overlap: int = 500) -> list[str]:
+    """按指定字符长度和重叠大小切分用于图谱抽取的文本。"""
     if not text:
         return []
 

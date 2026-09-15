@@ -9,6 +9,7 @@ from stage2.retrieval.vector import VectorIndex, gpu_name, resolve_device
 
 
 def inspect_chunks(path: str) -> tuple[int, int]:
+    """统计检索语料总块数及其中的 References 块数。"""
     chunk_count = 0
     references_count = 0
     with open(path, encoding="utf-8") as handle:
@@ -26,6 +27,7 @@ def inspect_chunks(path: str) -> tuple[int, int]:
 
 
 def main() -> None:
+    """按配置构建持久化 BGE-M3/FAISS 索引并执行完整性检查。"""
     load_dotenv()
     parser = argparse.ArgumentParser(description="Build the persisted Stage 2 BGE-M3 index.")
     parser.add_argument("--config", default="configs/default.json")

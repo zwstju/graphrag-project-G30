@@ -41,6 +41,7 @@ CASES = [
 
 
 def main():
+    """为四个指定真实查询生成多条件证据和可量化案例观察。"""
     load_dotenv()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--structured-config", default="configs/default.json")

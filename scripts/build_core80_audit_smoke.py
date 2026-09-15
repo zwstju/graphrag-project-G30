@@ -17,6 +17,7 @@ SMOKE_QIDS = [
 
 
 def main() -> None:
+    """从 Core80 构造题型均衡且覆盖不同论文数量的固定 Smoke8 子集。"""
     parser = argparse.ArgumentParser(
         description="Build the fixed balanced 8-item Core80 audit smoke subset."
     )
