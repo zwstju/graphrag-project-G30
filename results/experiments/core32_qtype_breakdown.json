@@ -1,0 +1,32 @@
+{
+  "overall": {
+    "n": 32,
+    "vector": 0.8734375,
+    "hybrid": 0.796875,
+    "rerank": 0.825
+  },
+  "Fact": {
+    "n": 8,
+    "vector": 0.85,
+    "hybrid": 0.825,
+    "rerank": 0.75
+  },
+  "Relation": {
+    "n": 8,
+    "vector": 0.875,
+    "hybrid": 0.8375,
+    "rerank": 0.875
+  },
+  "Comparison": {
+    "n": 8,
+    "vector": 0.8375,
+    "hybrid": 0.64375,
+    "rerank": 0.825
+  },
+  "Multi-hop": {
+    "n": 8,
+    "vector": 0.93125,
+    "hybrid": 0.88125,
+    "rerank": 0.85
+  }
+}
