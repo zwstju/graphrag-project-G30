@@ -282,6 +282,14 @@ function renderVerification(checks) {
     return;
   }
 
+  if (cv.error) {
+    $("verifyState").textContent = "ERROR";
+    $("verifyState").className = "pill muted-pill";
+    $("verification").className = "verification-empty";
+    $("verification").textContent = "Claim verification 失败：" + cv.error;
+    return;
+  }
+
   $("verifyState").textContent = "VERIFIED";
   $("verifyState").className = "pill";
   $("verification").className = "claim-list";

@@ -54,7 +54,20 @@ class Stage2System:
         if verify and method=='full':
             try: checks['claim_verification']=verify_claims_llm(query,ans,ev)
             except Exception as e: checks['claim_verification']={'error':str(e)}
+        timings = {
+            'retrieval_latency_s': t1-t0,
+            'generation_latency_s': t2-t1,
+            'total_latency_s': t2-t0,
+        }
         return {
-            'question':query,'method':method,'answer':ans,'evidence':[e.to_dict() for e in ev],
-            'citation_check':checks,'retrieval_latency_s':t1-t0,'generation_latency_s':t2-t1,'total_latency_s':t2-t0
+            'question': query,
+            'method': method,
+            'answer': ans,
+            'evidence': [e.to_dict() for e in ev],
+            # Canonical frontend/backend contract.
+            'checks': checks,
+            'timings': timings,
+            # Backward-compatible flat fields used by existing experiment code.
+            'citation_check': checks,
+            **timings,
         }

@@ -24,8 +24,18 @@ app = FastAPI(
     description="Stage2 live demo API + frontend for the final defense.",
 )
 
-# Load once so the vector index / graph are not rebuilt for every request.
-SYSTEM = Stage2System(str(ROOT / "configs" / "default.json"))
+# Initialize lazily on the first QA request. This keeps the health endpoint and
+# static frontend available even while model files or accelerator drivers are
+# being diagnosed. The initialized system is then reused by later requests.
+_SYSTEM: Stage2System | None = None
+
+
+def get_system() -> Stage2System:
+    """Create the Stage 2 pipeline once and reuse it for subsequent requests."""
+    global _SYSTEM
+    if _SYSTEM is None:
+        _SYSTEM = Stage2System(str(ROOT / "configs" / "default.json"))
+    return _SYSTEM
 
 
 class AskRequest(BaseModel):
@@ -106,6 +116,28 @@ def _plain(value: Any) -> Any:
             if not k.startswith("_")
         }
     return value
+
+
+def _result_checks(result: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalize current and legacy pipeline verification field names."""
+    checks = result.get("checks") or result.get("citation_check") or {}
+    return checks if isinstance(checks, dict) else {}
+
+
+def _result_timings(result: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalize nested and legacy flat latency fields for the frontend."""
+    timings = result.get("timings") or result.get("latency")
+    if isinstance(timings, dict) and timings:
+        return timings
+    return {
+        key: result[key]
+        for key in (
+            "retrieval_latency_s",
+            "generation_latency_s",
+            "total_latency_s",
+        )
+        if result.get(key) is not None
+    }
 
 
 def _evidence_to_dict(e: Any, rank: int) -> Dict[str, Any]:
@@ -296,6 +328,7 @@ def health() -> Dict[str, Any]:
     return {
         "status": "ok",
         "system": "Stage2 Evidence-Centric HybridRAG",
+        "qa_system_loaded": _SYSTEM is not None,
         "papers": _paper_count(),
         "retrieval_chunks": _count_jsonl(
             ROOT / "data" / "stage2" / "retrieval_chunks.jsonl"
@@ -322,13 +355,14 @@ def ask(request: AskRequest) -> Dict[str, Any]:
     verify = bool(request.verify and request.method == "full")
 
     try:
+        system = get_system()
         # Before-rerank evidence is useful for visualization.
         before_raw = []
         if request.method in {"rerank", "full"}:
-            before_raw = SYSTEM.retrieve(query, "hybrid")
+            before_raw = system.retrieve(query, "hybrid")
 
         t0 = time.perf_counter()
-        result = SYSTEM.answer(query, request.method, verify=verify)
+        result = system.answer(query, request.method, verify=verify)
         elapsed_ms = (time.perf_counter() - t0) * 1000
 
         if not isinstance(result, dict):
@@ -347,7 +381,7 @@ def ask(request: AskRequest) -> Dict[str, Any]:
 
         # Fall back to retrieval when the pipeline's answer() does not expose evidence.
         if not raw_evidence:
-            raw_evidence = SYSTEM.retrieve(query, request.method)
+            raw_evidence = system.retrieve(query, request.method)
 
         evidence = [
             _evidence_to_dict(e, i + 1)
@@ -361,12 +395,8 @@ def ask(request: AskRequest) -> Dict[str, Any]:
         checks = {}
         timings = {}
         if isinstance(result, dict):
-            checks = result.get("checks") or {}
-            timings = (
-                result.get("timings")
-                or result.get("latency")
-                or {}
-            )
+            checks = _result_checks(result)
+            timings = _result_timings(result)
 
         graph = _graph_from_evidence(
             before_evidence if before_evidence else evidence
